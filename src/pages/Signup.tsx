@@ -13,7 +13,7 @@ const Signup = () => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulate signup process
+    // Simulate signup process - allow any email without verification
     setTimeout(() => {
       setIsLoading(false);
       // Redirect to dashboard
@@ -52,24 +52,6 @@ const Signup = () => {
               disabled={isLoading}
             >
               {isLoading ? "Creating account..." : "Start Free Trial"}
-            </Button>
-
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Or continue with</span>
-              </div>
-            </div>
-
-            <Button 
-              type="button" 
-              variant="outline" 
-              className="w-full"
-            >
-              <span className="mr-2">🔍</span>
-              Continue with Google
             </Button>
           </form>
 
