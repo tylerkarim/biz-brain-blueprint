@@ -62,7 +62,7 @@ export const Navigation = () => {
             </>
           ) : (
             <>
-              <Link to="/pricing" className="hidden sm:block">
+              <Link to="/pricing">
                 <Button variant="ghost" size="sm" className="text-xs md:text-sm font-normal text-navy-500">
                   Pricing
                 </Button>
@@ -72,7 +72,7 @@ export const Navigation = () => {
                   onClick={handleSignOut} 
                   variant="ghost" 
                   size="sm" 
-                  className="text-xs md:text-sm font-normal text-red-600"
+                  className="text-xs md:text-sm font-normal text-red-600 hover:text-red-700 hover:bg-red-50"
                 >
                   Sign Out
                 </Button>
