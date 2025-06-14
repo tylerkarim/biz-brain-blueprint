@@ -25,11 +25,16 @@ export const HeroSection = () => {
               Transform your business ideas into reality with AI-powered tools for startup creation, business planning, and launch execution.
             </p>
             
-            <Link to="/signup">
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-white px-8 py-4 text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200">
-                Start for Free
-              </Button>
-            </Link>
+            <div className="mb-8">
+              <Link to="/signup" className="inline-block">
+                <Button 
+                  size="lg" 
+                  className="bg-primary hover:bg-primary/90 text-white px-8 py-4 text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer"
+                >
+                  Start for Free
+                </Button>
+              </Link>
+            </div>
           </div>
           
           {/* Flowing Lines Abstract Shape */}
