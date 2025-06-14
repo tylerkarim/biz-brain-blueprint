@@ -32,7 +32,7 @@ export const Navigation = () => {
         </div>
         
         <div className="flex items-center space-x-2 md:space-x-3">
-          {isLandingPage && !user ? (
+          {isLandingPage ? (
             <>
               <Link to="/login">
                 <Button 
