@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useState } from "react";
 import { 
   Lightbulb, 
   FileText, 
@@ -11,7 +12,9 @@ import {
   CheckSquare, 
   History, 
   FolderOpen,
-  BarChart3
+  BarChart3,
+  X,
+  Menu
 } from "lucide-react";
 
 interface DashboardSidebarProps {
@@ -21,6 +24,7 @@ interface DashboardSidebarProps {
 
 export const DashboardSidebar = ({ activeSection, onSectionChange }: DashboardSidebarProps) => {
   const { user } = useAuth();
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   // Fetch counts for each section
   const { data: counts } = useQuery({
@@ -99,49 +103,93 @@ export const DashboardSidebar = ({ activeSection, onSectionChange }: DashboardSi
     },
   ];
 
-  return (
-    <div className="w-56 bg-blue-600 min-h-screen text-white flex flex-col font-dm-sans">
-      {/* Logo/Brand */}
-      <div className="px-4 py-4 border-b border-blue-500/20">
-        <h1 className="text-lg font-medium text-white">BuildAura</h1>
-      </div>
+  const handleSectionChange = (section: string) => {
+    onSectionChange(section);
+    setIsMobileOpen(false); // Close mobile menu after selection
+  };
 
-      {/* Navigation */}
-      <nav className="flex-1 px-2 py-3">
-        <div className="space-y-1">
-          {sidebarItems.map((item) => {
-            const IconComponent = item.icon;
-            return (
-              <button
-                key={item.id}
-                onClick={() => onSectionChange(item.id)}
-                className={`w-full flex items-center justify-between px-3 py-2 rounded-md text-left transition-all duration-150 group text-sm ${
-                  item.isActive 
-                    ? 'bg-blue-500/80 text-white' 
-                    : 'text-blue-100 hover:bg-blue-500/40 hover:text-white'
-                }`}
-              >
-                <div className="flex items-center space-x-3">
-                  <IconComponent className="h-4 w-4 flex-shrink-0" />
-                  <span className="font-normal">{item.title}</span>
-                </div>
-                {item.count !== null && (
-                  <Badge 
-                    variant="secondary" 
-                    className={`text-xs px-1.5 py-0.5 rounded-full font-normal border-0 ${
-                      item.isActive 
-                        ? 'bg-white/20 text-white' 
-                        : 'bg-blue-500/30 text-blue-100'
-                    }`}
-                  >
-                    {item.count}
-                  </Badge>
-                )}
-              </button>
-            );
-          })}
+  return (
+    <>
+      {/* Mobile Menu Toggle Button */}
+      <Button
+        variant="ghost"
+        size="sm"
+        className="fixed top-20 left-4 z-50 md:hidden bg-white shadow-lg border"
+        onClick={() => setIsMobileOpen(!isMobileOpen)}
+      >
+        <Menu className="h-4 w-4" />
+      </Button>
+
+      {/* Mobile Overlay */}
+      {isMobileOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          onClick={() => setIsMobileOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <div className={`
+        fixed md:static inset-y-0 left-0 z-50 
+        w-64 md:w-56 bg-blue-600 text-white flex flex-col font-dm-sans
+        transform transition-transform duration-300 ease-in-out
+        ${isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+      `}>
+        {/* Mobile Close Button */}
+        <div className="flex items-center justify-between p-4 md:hidden border-b border-blue-500/20">
+          <h1 className="text-lg font-medium text-white">BuildAura</h1>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setIsMobileOpen(false)}
+            className="text-white hover:bg-blue-500/40"
+          >
+            <X className="h-4 w-4" />
+          </Button>
         </div>
-      </nav>
-    </div>
+
+        {/* Desktop Logo */}
+        <div className="hidden md:block px-4 py-4 border-b border-blue-500/20">
+          <h1 className="text-lg font-medium text-white">BuildAura</h1>
+        </div>
+
+        {/* Navigation */}
+        <nav className="flex-1 px-2 py-3 overflow-y-auto">
+          <div className="space-y-1">
+            {sidebarItems.map((item) => {
+              const IconComponent = item.icon;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => handleSectionChange(item.id)}
+                  className={`w-full flex items-center justify-between px-3 py-3 md:py-2 rounded-md text-left transition-all duration-150 group text-sm ${
+                    item.isActive 
+                      ? 'bg-blue-500/80 text-white' 
+                      : 'text-blue-100 hover:bg-blue-500/40 hover:text-white'
+                  }`}
+                >
+                  <div className="flex items-center space-x-3">
+                    <IconComponent className="h-5 w-5 md:h-4 md:w-4 flex-shrink-0" />
+                    <span className="font-normal">{item.title}</span>
+                  </div>
+                  {item.count !== null && (
+                    <Badge 
+                      variant="secondary" 
+                      className={`text-xs px-1.5 py-0.5 rounded-full font-normal border-0 ${
+                        item.isActive 
+                          ? 'bg-white/20 text-white' 
+                          : 'bg-blue-500/30 text-blue-100'
+                      }`}
+                    >
+                      {item.count}
+                    </Badge>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </nav>
+      </div>
+    </>
   );
 };

@@ -92,4 +92,72 @@
   h1, h2, h3, h4, h5, h6 {
     font-weight: 500;
   }
+
+  /* Responsive font scaling */
+  @screen sm {
+    html {
+      font-size: 16px;
+    }
+  }
+
+  @screen md {
+    html {
+      font-size: 16px;
+    }
+  }
+
+  @screen lg {
+    html {
+      font-size: 17px;
+    }
+  }
+
+  @screen xl {
+    html {
+      font-size: 18px;
+    }
+  }
+
+  /* Ensure dropdowns have proper z-index and background */
+  [data-radix-popper-content-wrapper] {
+    z-index: 50 !important;
+  }
+
+  [role="menu"], [role="listbox"] {
+    background: white;
+    z-index: 50;
+  }
+}
+
+/* Mobile-first responsive utilities */
+@layer utilities {
+  .text-responsive {
+    @apply text-sm md:text-base lg:text-lg;
+  }
+
+  .heading-responsive {
+    @apply text-lg md:text-xl lg:text-2xl;
+  }
+
+  .subheading-responsive {
+    @apply text-base md:text-lg lg:text-xl;
+  }
+
+  .padding-responsive {
+    @apply p-4 md:p-6 lg:p-8;
+  }
+
+  .margin-responsive {
+    @apply m-4 md:m-6 lg:m-8;
+  }
+
+  /* Ensure touch targets are at least 44px on mobile */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+
+  /* Container utilities for different screen sizes */
+  .container-responsive {
+    @apply w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-4xl xl:max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
 }

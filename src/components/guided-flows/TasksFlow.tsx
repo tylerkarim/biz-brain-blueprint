@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -121,9 +122,9 @@ export const TasksFlow = ({ onBack }: TasksFlowProps) => {
       case 1:
         return (
           <div className="space-y-6">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-navy-900 mb-2">What do you want to accomplish this week?</h2>
-              <p className="text-gray-600">I'll create a strategic action plan to help you achieve this goal.</p>
+            <div className="text-center mb-6 md:mb-8">
+              <h2 className="text-xl md:text-2xl font-bold text-navy-900 mb-2">What do you want to accomplish this week?</h2>
+              <p className="text-sm md:text-base text-gray-600">I'll create a strategic action plan to help you achieve this goal.</p>
             </div>
             
             <div>
@@ -134,9 +135,9 @@ export const TasksFlow = ({ onBack }: TasksFlowProps) => {
                 value={formData.weeklyGoal}
                 onChange={(e) => setFormData(prev => ({ ...prev, weeklyGoal: e.target.value }))}
                 placeholder="e.g., Launch my MVP, validate my business idea, get first 10 customers..."
-                className="w-full h-12"
+                className="w-full h-12 text-sm md:text-base"
               />
-              <p className="text-sm text-gray-500 mt-2">Be specific about what success looks like this week.</p>
+              <p className="text-xs md:text-sm text-gray-500 mt-2">Be specific about what success looks like this week.</p>
             </div>
           </div>
         );
@@ -144,9 +145,9 @@ export const TasksFlow = ({ onBack }: TasksFlowProps) => {
       case 2:
         return (
           <div className="space-y-6">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-navy-900 mb-2">How much time can you dedicate?</h2>
-              <p className="text-gray-600">This helps me create a realistic action plan that fits your schedule.</p>
+            <div className="text-center mb-6 md:mb-8">
+              <h2 className="text-xl md:text-2xl font-bold text-navy-900 mb-2">How much time can you dedicate?</h2>
+              <p className="text-sm md:text-base text-gray-600">This helps me create a realistic action plan that fits your schedule.</p>
             </div>
             
             <div>
@@ -157,9 +158,9 @@ export const TasksFlow = ({ onBack }: TasksFlowProps) => {
                 value={formData.availableHours}
                 onChange={(e) => setFormData(prev => ({ ...prev, availableHours: e.target.value }))}
                 placeholder="e.g., 10 hours, 20 hours, 5 hours on weekends..."
-                className="w-full h-12"
+                className="w-full h-12 text-sm md:text-base"
               />
-              <p className="text-sm text-gray-500 mt-2">Include evenings, weekends, or any time you can work on this.</p>
+              <p className="text-xs md:text-sm text-gray-500 mt-2">Include evenings, weekends, or any time you can work on this.</p>
             </div>
           </div>
         );
@@ -167,9 +168,9 @@ export const TasksFlow = ({ onBack }: TasksFlowProps) => {
       case 3:
         return (
           <div className="space-y-6">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-navy-900 mb-2">What type of work do you need?</h2>
-              <p className="text-gray-600">This determines whether I focus on planning or hands-on tasks.</p>
+            <div className="text-center mb-6 md:mb-8">
+              <h2 className="text-xl md:text-2xl font-bold text-navy-900 mb-2">What type of work do you need?</h2>
+              <p className="text-sm md:text-base text-gray-600">This determines whether I focus on planning or hands-on tasks.</p>
             </div>
             
             <div className="space-y-4">
@@ -177,33 +178,33 @@ export const TasksFlow = ({ onBack }: TasksFlowProps) => {
                 Focus area for this week
               </label>
               <div className="grid grid-cols-1 gap-4">
-                <label className="flex items-center space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
+                <label className="flex items-start space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
                   <input
                     type="radio"
                     name="focusType"
                     value="strategy"
                     checked={formData.focusType === "strategy"}
                     onChange={(e) => setFormData(prev => ({ ...prev, focusType: e.target.value }))}
-                    className="text-primary"
+                    className="text-primary mt-1"
                   />
-                  <div>
-                    <div className="font-medium">Strategy & Planning</div>
-                    <div className="text-sm text-gray-600">Research, validation, business planning, market analysis</div>
+                  <div className="flex-1">
+                    <div className="font-medium text-sm md:text-base">Strategy & Planning</div>
+                    <div className="text-xs md:text-sm text-gray-600 mt-1">Research, validation, business planning, market analysis</div>
                   </div>
                 </label>
                 
-                <label className="flex items-center space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
+                <label className="flex items-start space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
                   <input
                     type="radio"
                     name="focusType"
                     value="execution"
                     checked={formData.focusType === "execution"}
                     onChange={(e) => setFormData(prev => ({ ...prev, focusType: e.target.value }))}
-                    className="text-primary"
+                    className="text-primary mt-1"
                   />
-                  <div>
-                    <div className="font-medium">Execution & Building</div>
-                    <div className="text-sm text-gray-600">Development, marketing, sales, product creation</div>
+                  <div className="flex-1">
+                    <div className="font-medium text-sm md:text-base">Execution & Building</div>
+                    <div className="text-xs md:text-sm text-gray-600 mt-1">Development, marketing, sales, product creation</div>
                   </div>
                 </label>
               </div>
@@ -214,15 +215,15 @@ export const TasksFlow = ({ onBack }: TasksFlowProps) => {
       case 4:
         return (
           <div className="space-y-6">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-navy-900 mb-2">Your Weekly Action Plan</h2>
-              <p className="text-gray-600">Strategic tasks to achieve: {formData.weeklyGoal}</p>
+            <div className="text-center mb-6 md:mb-8">
+              <h2 className="text-xl md:text-2xl font-bold text-navy-900 mb-2">Your Weekly Action Plan</h2>
+              <p className="text-sm md:text-base text-gray-600 px-2">Strategic tasks to achieve: {formData.weeklyGoal}</p>
             </div>
             
-            <div className="space-y-4">
+            <div className="space-y-3 md:space-y-4">
               {generatedTasks.map((task) => (
-                <Card key={task.id} className="p-4 border-0 shadow-lg">
-                  <div className="flex items-start space-x-4">
+                <Card key={task.id} className="p-3 md:p-4 border-0 shadow-lg">
+                  <div className="flex items-start space-x-3 md:space-x-4">
                     <Checkbox
                       checked={task.completed}
                       onCheckedChange={(checked) => 
@@ -230,21 +231,21 @@ export const TasksFlow = ({ onBack }: TasksFlowProps) => {
                       }
                       className="mt-1"
                     />
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className={`font-semibold ${task.completed ? 'line-through text-gray-500' : 'text-navy-900'}`}>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2 space-y-2 sm:space-y-0">
+                        <h3 className={`font-semibold text-sm md:text-base ${task.completed ? 'line-through text-gray-500' : 'text-navy-900'} pr-2`}>
                           {task.title}
                         </h3>
-                        <div className="flex items-center space-x-2">
+                        <div className="flex flex-wrap items-center gap-2">
                           <Badge variant={
                             task.priority === 'high' ? 'destructive' : 
                             task.priority === 'medium' ? 'default' : 
                             'secondary'
-                          }>
+                          } className="text-xs">
                             {task.priority}
                           </Badge>
                           {task.due_date && (
-                            <Badge variant="outline">
+                            <Badge variant="outline" className="text-xs">
                               Due: {new Date(task.due_date).toLocaleDateString()}
                             </Badge>
                           )}
@@ -252,14 +253,14 @@ export const TasksFlow = ({ onBack }: TasksFlowProps) => {
                             variant="ghost"
                             size="sm"
                             onClick={() => deleteTask(task.id)}
-                            className="text-red-500 hover:text-red-700"
+                            className="text-red-500 hover:text-red-700 h-6 w-6 p-0"
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <Trash2 className="h-3 w-3" />
                           </Button>
                         </div>
                       </div>
                       {task.description && (
-                        <p className={`text-sm ${task.completed ? 'text-gray-400' : 'text-gray-600'}`}>
+                        <p className={`text-xs md:text-sm ${task.completed ? 'text-gray-400' : 'text-gray-600'}`}>
                           {task.description}
                         </p>
                       )}
@@ -277,12 +278,12 @@ export const TasksFlow = ({ onBack }: TasksFlowProps) => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <div className="flex items-center mb-8">
+    <div className="max-w-4xl mx-auto p-4 md:p-6">
+      <div className="flex flex-col sm:flex-row sm:items-center mb-6 md:mb-8 space-y-4 sm:space-y-0">
         <Button
           variant="ghost"
           onClick={onBack}
-          className="mr-4"
+          className="mr-0 sm:mr-4 w-fit"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Go Back
@@ -295,22 +296,23 @@ export const TasksFlow = ({ onBack }: TasksFlowProps) => {
         )}
       </div>
 
-      <Card className="p-8 border-0 shadow-lg">
+      <Card className="p-4 md:p-8 border-0 shadow-lg">
         {renderStep()}
         
         {currentStep < 4 && (
-          <div className="flex justify-between mt-8">
+          <div className="flex flex-col sm:flex-row justify-between mt-6 md:mt-8 space-y-3 sm:space-y-0 sm:space-x-3">
             <Button
               variant="outline"
               onClick={() => setCurrentStep(Math.max(1, currentStep - 1))}
               disabled={currentStep === 1}
+              className="w-full sm:w-auto order-2 sm:order-1"
             >
               Previous
             </Button>
             <Button
               onClick={currentStep === 3 ? generateTasks : () => setCurrentStep(currentStep + 1)}
               disabled={isLoading}
-              className="bg-primary hover:bg-primary/90"
+              className="bg-primary hover:bg-primary/90 w-full sm:w-auto order-1 sm:order-2"
             >
               {isLoading ? "Generating Tasks..." : currentStep === 3 ? "Generate Action Plan" : "Next"}
             </Button>

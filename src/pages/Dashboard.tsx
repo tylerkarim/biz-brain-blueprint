@@ -59,17 +59,17 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex font-dm-sans">
-      {/* Sidebar */}
+      {/* Sidebar - Hidden on mobile, shown as overlay */}
       <DashboardSidebar 
         activeSection={activeSection}
         onSectionChange={setActiveSection}
       />
       
       {/* Main Content */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col w-full md:ml-0">
         <Navigation />
         
-        <main className="flex-1 pt-16 bg-gray-50">
+        <main className="flex-1 pt-16 bg-gray-50 px-4 md:px-0">
           {activeSection === 'overview' ? (
             <DashboardOverview onToolStart={handleToolStart} />
           ) : (

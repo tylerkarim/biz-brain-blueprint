@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 import { 
   Table, 
   TableBody, 
@@ -151,6 +152,112 @@ export const DashboardTable = ({ section, onBack, onToolStart }: DashboardTableP
     return toolMap[section as keyof typeof toolMap] || section;
   };
 
+  const formatDate = (date: string) => new Date(date).toLocaleDateString('en-US', { 
+    month: 'short', 
+    day: 'numeric',
+    year: 'numeric'
+  });
+
+  const renderMobileCard = (item: any, index: number) => {
+    const itemId = `#${(index + 1).toString().padStart(3, '0')}`;
+    
+    return (
+      <Card key={item.id} className="p-4 mb-4 border shadow-sm">
+        <div className="flex justify-between items-start mb-3">
+          <span className="font-mono text-xs text-gray-500">{itemId}</span>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-gray-400 hover:text-gray-600">
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="bg-white border border-gray-200 shadow-lg z-50">
+              <DropdownMenuItem className="cursor-pointer text-sm">
+                <Eye className="h-4 w-4 mr-2" />
+                View
+              </DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer text-sm">
+                <Edit className="h-4 w-4 mr-2" />
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem 
+                className="cursor-pointer text-sm text-red-600"
+                onClick={() => deleteItem(item.id)}
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+
+        {section === 'ideas' && (
+          <div className="space-y-2">
+            <h3 className="font-medium text-sm">{item.title}</h3>
+            <div className="flex items-center justify-between">
+              <Badge variant="outline" className="text-xs">Startup</Badge>
+              <span className="text-xs text-gray-600">{formatDate(item.created_at)}</span>
+            </div>
+            <Badge variant="secondary" className="text-xs">New</Badge>
+          </div>
+        )}
+
+        {section === 'plans' && (
+          <div className="space-y-2">
+            <h3 className="font-medium text-sm">{item.business_name}</h3>
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-gray-600">Based on: {item.business_name}</span>
+              <span className="text-xs text-gray-600">{formatDate(item.created_at)}</span>
+            </div>
+            <Badge className="text-xs bg-green-100 text-green-700 hover:bg-green-100">Complete</Badge>
+          </div>
+        )}
+
+        {section === 'launch' && (
+          <div className="space-y-2">
+            <h3 className="font-medium text-sm">{item.business_name}</h3>
+            <div className="flex items-center justify-between">
+              <Badge variant="outline" className="text-xs">Logo, Colors</Badge>
+              <span className="text-xs text-gray-600">{formatDate(item.created_at)}</span>
+            </div>
+            <Badge className="text-xs bg-blue-100 text-blue-700 hover:bg-blue-100">Ready</Badge>
+          </div>
+        )}
+
+        {section === 'tasks' && (
+          <div className="space-y-2">
+            <h3 className="font-medium text-sm">{item.title}</h3>
+            <div className="flex items-center justify-between">
+              <Badge 
+                variant={item.priority === 'high' ? 'destructive' : 'outline'} 
+                className="text-xs"
+              >
+                {item.priority}
+              </Badge>
+              <span className="text-xs text-gray-600">{item.due_date ? formatDate(item.due_date) : '-'}</span>
+            </div>
+            <Badge 
+              className={`text-xs ${item.completed ? 'bg-green-100 text-green-700 hover:bg-green-100' : 'bg-gray-100 text-gray-700 hover:bg-gray-100'}`}
+            >
+              {item.completed ? 'Complete' : 'Pending'}
+            </Badge>
+          </div>
+        )}
+
+        {section === 'history' && (
+          <div className="space-y-2">
+            <h3 className="font-medium text-sm">{item.tool_name}</h3>
+            <p className="text-xs text-gray-600 truncate">{item.prompt.substring(0, 60)}...</p>
+            <div className="flex items-center justify-between">
+              <Badge variant="outline" className="text-xs">Completed</Badge>
+              <span className="text-xs text-gray-600">{formatDate(item.created_at)}</span>
+            </div>
+          </div>
+        )}
+      </Card>
+    );
+  };
+
   const renderRowData = (item: any, index: number) => {
     const formatDate = (date: string) => new Date(date).toLocaleDateString('en-US', { 
       month: 'short', 
@@ -235,7 +342,7 @@ export const DashboardTable = ({ section, onBack, onToolStart }: DashboardTableP
 
   if (isLoading) {
     return (
-      <div className="p-6">
+      <div className="p-4 md:p-6">
         <div className="max-w-7xl mx-auto">
           <div className="animate-pulse space-y-4">
             <div className="h-6 bg-gray-200 rounded w-1/4"></div>
@@ -247,10 +354,10 @@ export const DashboardTable = ({ section, onBack, onToolStart }: DashboardTableP
   }
 
   return (
-    <div className="p-6">
+    <div className="p-4 md:p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 space-y-4 sm:space-y-0">
           <div className="flex items-center space-x-4">
             <Button 
               variant="ghost" 
@@ -261,85 +368,109 @@ export const DashboardTable = ({ section, onBack, onToolStart }: DashboardTableP
               <ArrowLeft className="h-4 w-4" />
             </Button>
             <div>
-              <h1 className="text-lg font-medium text-gray-900">{tableData?.title}</h1>
+              <h1 className="text-lg md:text-xl font-medium text-gray-900">{tableData?.title}</h1>
               <p className="text-sm text-gray-500">{tableData?.items.length || 0} items found</p>
             </div>
           </div>
           <Button 
             size="sm"
             onClick={() => onToolStart(getToolName())}
-            className="bg-blue-600 hover:bg-blue-700 text-white"
+            className="bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto"
           >
             <Plus className="h-4 w-4 mr-1" />
             Add New
           </Button>
         </div>
 
-        {/* Table */}
-        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-gray-50 border-b border-gray-200">
-                {tableData?.columns.map((column) => (
-                  <TableHead key={column} className="font-medium text-gray-700 text-xs uppercase tracking-wide py-3 px-4">
-                    {column}
-                  </TableHead>
-                ))}
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {tableData?.items && tableData.items.length > 0 ? (
-                tableData.items.map((item, index) => (
-                  <TableRow key={item.id} className="border-b border-gray-100 hover:bg-gray-50/50">
-                    {renderRowData(item, index)}
-                    <TableCell className="px-4 py-3">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-gray-400 hover:text-gray-600">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="bg-white border border-gray-200 shadow-lg">
-                          <DropdownMenuItem className="cursor-pointer text-sm">
-                            <Eye className="h-4 w-4 mr-2" />
-                            View
-                          </DropdownMenuItem>
-                          <DropdownMenuItem className="cursor-pointer text-sm">
-                            <Edit className="h-4 w-4 mr-2" />
-                            Edit
-                          </DropdownMenuItem>
-                          <DropdownMenuItem 
-                            className="cursor-pointer text-sm text-red-600"
-                            onClick={() => deleteItem(item.id)}
-                          >
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+        {/* Mobile Card View */}
+        <div className="block md:hidden">
+          {tableData?.items && tableData.items.length > 0 ? (
+            tableData.items.map((item, index) => renderMobileCard(item, index))
+          ) : (
+            <Card className="p-8 text-center">
+              <div className="text-gray-500">
+                <p className="text-sm font-medium mb-1">No {tableData?.title?.toLowerCase()} yet</p>
+                <p className="text-xs text-gray-400 mb-4">Get started by creating your first item</p>
+                <Button 
+                  size="sm"
+                  onClick={() => onToolStart(getToolName())}
+                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                  <Plus className="h-4 w-4 mr-1" />
+                  Create First Item
+                </Button>
+              </div>
+            </Card>
+          )}
+        </div>
+
+        {/* Desktop Table View */}
+        <div className="hidden md:block bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-gray-50 border-b border-gray-200">
+                  {tableData?.columns.map((column) => (
+                    <TableHead key={column} className="font-medium text-gray-700 text-xs uppercase tracking-wide py-3 px-4 whitespace-nowrap">
+                      {column}
+                    </TableHead>
+                  ))}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {tableData?.items && tableData.items.length > 0 ? (
+                  tableData.items.map((item, index) => (
+                    <TableRow key={item.id} className="border-b border-gray-100 hover:bg-gray-50/50">
+                      {renderRowData(item, index)}
+                      <TableCell className="px-4 py-3">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-gray-400 hover:text-gray-600">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="bg-white border border-gray-200 shadow-lg z-50">
+                            <DropdownMenuItem className="cursor-pointer text-sm">
+                              <Eye className="h-4 w-4 mr-2" />
+                              View
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="cursor-pointer text-sm">
+                              <Edit className="h-4 w-4 mr-2" />
+                              Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuItem 
+                              className="cursor-pointer text-sm text-red-600"
+                              onClick={() => deleteItem(item.id)}
+                            >
+                              <Trash2 className="h-4 w-4 mr-2" />
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={tableData?.columns.length || 6} className="text-center py-12">
+                      <div className="text-gray-500">
+                        <p className="text-sm font-medium mb-1">No {tableData?.title?.toLowerCase()} yet</p>
+                        <p className="text-xs text-gray-400 mb-4">Get started by creating your first item</p>
+                        <Button 
+                          size="sm"
+                          onClick={() => onToolStart(getToolName())}
+                          className="bg-blue-600 hover:bg-blue-700 text-white"
+                        >
+                          <Plus className="h-4 w-4 mr-1" />
+                          Create First Item
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={tableData?.columns.length || 6} className="text-center py-12">
-                    <div className="text-gray-500">
-                      <p className="text-sm font-medium mb-1">No {tableData?.title?.toLowerCase()} yet</p>
-                      <p className="text-xs text-gray-400 mb-4">Get started by creating your first item</p>
-                      <Button 
-                        size="sm"
-                        onClick={() => onToolStart(getToolName())}
-                        className="bg-blue-600 hover:bg-blue-700 text-white"
-                      >
-                        <Plus className="h-4 w-4 mr-1" />
-                        Create First Item
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+                )}
+              </TableBody>
+            </Table>
+          </div>
         </div>
       </div>
     </div>
