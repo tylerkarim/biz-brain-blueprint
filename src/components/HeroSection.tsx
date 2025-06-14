@@ -1,6 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Link } from "react-router-dom";
 
 export const HeroSection = () => {
   return (
@@ -36,9 +37,11 @@ export const HeroSection = () => {
               Transform your business ideas into reality with AI-powered tools for startup creation, business planning, and launch execution.
             </p>
             
-            <Button size="lg" className="bg-primary hover:bg-primary/90 text-white px-8 py-4 text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200">
-              Get a Free Trial
-            </Button>
+            <Link to="/signup">
+              <Button size="lg" className="bg-primary hover:bg-primary/90 text-white px-8 py-4 text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200">
+                Start for Free
+              </Button>
+            </Link>
           </div>
           
           {/* 3D Abstract Shape */}

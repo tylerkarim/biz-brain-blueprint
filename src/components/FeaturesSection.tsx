@@ -21,7 +21,7 @@ export const FeaturesSection = () => {
             <div className="relative mx-auto w-80 h-96 bg-navy-900 rounded-3xl p-2 shadow-2xl">
               <div className="w-full h-full bg-white rounded-2xl overflow-hidden">
                 <div className="bg-primary h-20 flex items-center justify-center">
-                  <span className="text-white font-semibold text-lg">LaunchBuddy AI</span>
+                  <span className="text-white font-semibold text-lg">BuildAura AI</span>
                 </div>
                 <div className="p-6 space-y-4">
                   <div className="bg-gray-100 rounded-lg p-4">

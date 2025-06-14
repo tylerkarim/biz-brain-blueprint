@@ -1,3 +1,4 @@
+
 export const Footer = () => {
   const footerSections = [{
     title: "Product",
@@ -18,7 +19,7 @@ export const Footer = () => {
           {/* Brand */}
           <div className="lg:col-span-1">
             <div className="mb-6">
-              <span className="text-2xl font-bold">LaunchBuddy</span>
+              <span className="text-2xl font-bold">BuildAura</span>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed mb-6">
               Transform your business ideas into reality with AI-powered tools for startup success.
@@ -55,7 +56,7 @@ export const Footer = () => {
         {/* Bottom Border */}
         <div className="border-t border-gray-800 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400 text-sm">© 2025 LaunchBuddy. All rights reserved.</p>
+            <p className="text-gray-400 text-sm">© 2025 BuildAura. All rights reserved.</p>
             <div className="flex items-center space-x-6 mt-4 md:mt-0">
               <span className="text-gray-400 text-sm">Proudly supported by AI</span>
               <div className="flex items-center space-x-2">

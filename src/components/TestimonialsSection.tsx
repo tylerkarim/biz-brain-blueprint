@@ -7,7 +7,7 @@ const testimonials = [
     name: "Sarah Chen",
     company: "Flipr",
     industry: "E-commerce",
-    content: "LaunchBuddy helped us validate and launch our marketplace idea in just 30 days. The AI-generated business plan was incredibly detailed and actionable.",
+    content: "BuildAura helped us validate and launch our marketplace idea in just 30 days. The AI-generated business plan was incredibly detailed and actionable.",
     rating: 5
   },
   {
