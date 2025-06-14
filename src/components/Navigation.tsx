@@ -16,30 +16,57 @@ export const Navigation = () => {
   // Determine the home route based on authentication status
   const homeRoute = user ? "/dashboard" : "/";
 
+  // Check if we're on the landing page
+  const isLandingPage = location.pathname === "/";
+
   return (
-    <nav className="fixed top-0 left-56 right-0 z-40 bg-white border-b border-gray-200">
+    <nav className="fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-200">
       <div className="px-6 h-16 flex items-center justify-between">
         <div className="flex items-center">
-          <div className="text-sm text-gray-600">
-            Welcome back to BuildAura
-          </div>
+          {isLandingPage ? (
+            <Link to="/" className="text-2xl font-bold">
+              <span className="text-black">Build</span>
+              <span className="text-blue-600">Aura</span>
+            </Link>
+          ) : (
+            <div className="text-sm text-gray-600">
+              Welcome back to BuildAura
+            </div>
+          )}
         </div>
         
         <div className="flex items-center space-x-3">
-          <Link to="/pricing">
-            <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900 text-sm font-normal">
-              Pricing
-            </Button>
-          </Link>
-          {user && (
-            <Button 
-              onClick={handleSignOut} 
-              variant="ghost" 
-              size="sm"
-              className="text-gray-600 hover:text-gray-900 text-sm font-normal"
-            >
-              Sign Out
-            </Button>
+          {isLandingPage && !user ? (
+            <>
+              <Link to="/login">
+                <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900 text-sm font-normal">
+                  Log In
+                </Button>
+              </Link>
+              <Link to="/signup">
+                <Button size="sm" className="bg-primary hover:bg-primary/90 text-white text-sm font-normal">
+                  Sign Up
+                </Button>
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link to="/pricing">
+                <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900 text-sm font-normal">
+                  Pricing
+                </Button>
+              </Link>
+              {user && (
+                <Button 
+                  onClick={handleSignOut} 
+                  variant="ghost" 
+                  size="sm"
+                  className="text-gray-600 hover:text-gray-900 text-sm font-normal"
+                >
+                  Sign Out
+                </Button>
+              )}
+            </>
           )}
         </div>
       </div>
