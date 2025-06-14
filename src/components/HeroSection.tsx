@@ -11,18 +11,6 @@ export const HeroSection = () => {
       
       <div className="max-w-7xl mx-auto">
         <div className="text-center">
-          {/* Floating Assistant Message */}
-          <div className="absolute top-20 left-1/4 hidden lg:block animate-float">
-            <Card className="p-3 shadow-lg border-0 bg-white/90 backdrop-blur-sm">
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-                  <span className="text-white text-sm">🤖</span>
-                </div>
-                <span className="text-sm text-gray-700">I need to launch my startup idea</span>
-              </div>
-            </Card>
-          </div>
-          
           {/* Main Content */}
           <div className="mx-auto max-w-4xl">
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-navy-900 mb-6 leading-tight">
