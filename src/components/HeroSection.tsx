@@ -44,14 +44,14 @@ export const HeroSection = () => {
             </Link>
           </div>
           
-          {/* 3D Abstract Shape */}
+          {/* Flowing Lines Abstract Shape */}
           <div className="relative mt-16">
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-blue-600/20 rounded-3xl blur-3xl"></div>
-            <div className="relative">
-              <div className="w-96 h-96 mx-auto bg-gradient-to-br from-primary via-blue-500 to-blue-600 rounded-3xl shadow-2xl transform rotate-12 opacity-80">
-                <div className="absolute inset-4 bg-gradient-to-tl from-white/20 to-white/40 rounded-2xl backdrop-blur-sm"></div>
-                <div className="absolute inset-8 bg-gradient-to-br from-primary/60 to-blue-600/60 rounded-xl"></div>
-              </div>
+            <div className="w-96 h-96 mx-auto relative">
+              <img 
+                src="/lovable-uploads/73116177-a30a-4ace-9d48-59b070782d28.png" 
+                alt="Flowing lines abstract design" 
+                className="w-full h-full object-contain opacity-80 animate-float"
+              />
             </div>
           </div>
         </div>
