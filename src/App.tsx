@@ -13,6 +13,9 @@ import Dashboard from "./pages/Dashboard";
 import IdeaGenerator from "./pages/IdeaGenerator";
 import BusinessPlan from "./pages/BusinessPlan";
 import LaunchToolkit from "./pages/LaunchToolkit";
+import Tasks from "./pages/Tasks";
+import PromptHistory from "./pages/PromptHistory";
+import Resources from "./pages/Resources";
 import Pricing from "./pages/Pricing";
 import Referrals from "./pages/Referrals";
 import Settings from "./pages/Settings";
@@ -50,6 +53,21 @@ const App = () => (
             <Route path="/tools/launch-toolkit" element={
               <ProtectedRoute>
                 <LaunchToolkit />
+              </ProtectedRoute>
+            } />
+            <Route path="/tools/tasks" element={
+              <ProtectedRoute>
+                <Tasks />
+              </ProtectedRoute>
+            } />
+            <Route path="/tools/prompt-history" element={
+              <ProtectedRoute>
+                <PromptHistory />
+              </ProtectedRoute>
+            } />
+            <Route path="/resources" element={
+              <ProtectedRoute>
+                <Resources />
               </ProtectedRoute>
             } />
             <Route path="/referrals" element={

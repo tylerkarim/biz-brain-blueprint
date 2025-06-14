@@ -1,4 +1,3 @@
-
 import { FolderCard } from "./FolderCard";
 import { Lightbulb, FileText, Rocket, ListTodo, FileText as HistoryIcon, Folder } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -73,7 +72,7 @@ export const FolderGrid = ({ onFolderClick, searchQuery }: FolderGridProps) => {
       icon: ListTodo,
       count: folderCounts?.['tasks'] || 0,
       countLabel: "pending",
-      href: "/dashboard/tasks"
+      href: "/tools/tasks"
     },
     {
       id: "prompt-history",
@@ -82,7 +81,7 @@ export const FolderGrid = ({ onFolderClick, searchQuery }: FolderGridProps) => {
       icon: HistoryIcon,
       count: folderCounts?.['prompt-history'] || 0,
       countLabel: "prompts",
-      href: "/prompt-history"
+      href: "/tools/prompt-history"
     },
     {
       id: "resources",

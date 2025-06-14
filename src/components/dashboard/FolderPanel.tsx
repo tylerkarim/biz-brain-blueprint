@@ -1,9 +1,9 @@
-
 import { X, ExternalLink, Edit, Trash2, Folder } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
 
 interface FolderPanelProps {
   folderId: string;
@@ -12,6 +12,7 @@ interface FolderPanelProps {
 
 export const FolderPanel = ({ folderId, onClose }: FolderPanelProps) => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const { data: folderContent, isLoading } = useQuery({
     queryKey: ['folder-content', folderId, user?.id],
@@ -29,7 +30,8 @@ export const FolderPanel = ({ folderId, onClose }: FolderPanelProps) => {
             title: "AI Business Ideas",
             description: "Your generated startup ideas",
             items: ideas || [],
-            isEmpty: !ideas || ideas.length === 0
+            isEmpty: !ideas || ideas.length === 0,
+            actionPath: "/tools/idea-generator"
           };
           
         case 'business-plans':
@@ -42,7 +44,8 @@ export const FolderPanel = ({ folderId, onClose }: FolderPanelProps) => {
             title: "Business Plans",
             description: "Your business plans and canvases",
             items: plans || [],
-            isEmpty: !plans || plans.length === 0
+            isEmpty: !plans || plans.length === 0,
+            actionPath: "/tools/business-plan"
           };
           
         case 'launch-toolkit':
@@ -55,7 +58,8 @@ export const FolderPanel = ({ folderId, onClose }: FolderPanelProps) => {
             title: "Launch Toolkit",
             description: "Logo designs, domain suggestions, and branding assets",
             items: assets || [],
-            isEmpty: !assets || assets.length === 0
+            isEmpty: !assets || assets.length === 0,
+            actionPath: "/tools/launch-toolkit"
           };
           
         case 'tasks':
@@ -68,7 +72,8 @@ export const FolderPanel = ({ folderId, onClose }: FolderPanelProps) => {
             title: "Tasks",
             description: "AI-generated weekly goals and action items",
             items: tasks || [],
-            isEmpty: !tasks || tasks.length === 0
+            isEmpty: !tasks || tasks.length === 0,
+            actionPath: "/tools/tasks"
           };
           
         case 'prompt-history':
@@ -81,7 +86,8 @@ export const FolderPanel = ({ folderId, onClose }: FolderPanelProps) => {
             title: "Prompt History",
             description: "All your AI conversations and prompts",
             items: history || [],
-            isEmpty: !history || history.length === 0
+            isEmpty: !history || history.length === 0,
+            actionPath: "/tools/prompt-history"
           };
           
         default:
@@ -89,12 +95,19 @@ export const FolderPanel = ({ folderId, onClose }: FolderPanelProps) => {
             title: "Resources",
             description: "Templates, guides, and downloadable files",
             items: [],
-            isEmpty: true
+            isEmpty: true,
+            actionPath: "/resources"
           };
       }
     },
     enabled: !!user
   });
+
+  const handleStartWithAI = () => {
+    if (folderContent?.actionPath) {
+      navigate(folderContent.actionPath);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -170,8 +183,11 @@ export const FolderPanel = ({ folderId, onClose }: FolderPanelProps) => {
             <Folder className="h-8 w-8 text-gray-400" />
           </div>
           <p className="text-gray-500 mb-4">This folder is empty</p>
-          <Button className="bg-primary hover:bg-primary/90">
-            Create your first item
+          <Button 
+            className="bg-primary hover:bg-primary/90"
+            onClick={handleStartWithAI}
+          >
+            Start with AI
           </Button>
         </div>
       ) : (
@@ -199,6 +215,15 @@ export const FolderPanel = ({ folderId, onClose }: FolderPanelProps) => {
               </div>
             </div>
           ))}
+          
+          <div className="pt-4 border-t border-gray-200">
+            <Button 
+              className="w-full bg-primary hover:bg-primary/90"
+              onClick={handleStartWithAI}
+            >
+              Create Another with AI
+            </Button>
+          </div>
         </div>
       )}
     </div>
