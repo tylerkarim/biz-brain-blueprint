@@ -1,9 +1,11 @@
 
 import { Navigation } from "@/components/Navigation";
+import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Download, FileText, Image, Palette, BookOpen, ExternalLink } from "lucide-react";
+import { Download, FileText, Image, Palette, BookOpen, ExternalLink, Trash2, Folder } from "lucide-react";
+import { GoBackButton } from "@/components/common/GoBackButton";
 
 const Resources = () => {
   const templates = [
@@ -66,94 +68,116 @@ const Resources = () => {
     }
   ];
 
+  const handleDelete = (id: number) => {
+    // Delete functionality will be implemented when connected to database
+    console.log('Delete template:', id);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navigation />
       
-      <main className="pt-24 pb-16 px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-navy-900 mb-4">Resources</h1>
-            <p className="text-xl text-gray-600">Templates, guides, and tools to help you succeed</p>
-          </div>
+      <div className="pt-16 flex">
+        <Sidebar />
+        
+        <main className="flex-1 bg-white">
+          <div className="max-w-6xl mx-auto p-6">
+            <GoBackButton />
+            
+            <div className="text-center mb-8">
+              <Folder className="h-12 w-12 text-gray-600 mx-auto mb-4" />
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">Resources</h1>
+              <p className="text-gray-600 font-medium">Templates, guides, and tools to help you succeed</p>
+            </div>
 
-          <div className="grid gap-12">
-            {/* Templates Section */}
-            <section>
-              <h2 className="text-2xl font-bold text-navy-900 mb-6">Download Templates</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {templates.map((template) => {
-                  const IconComponent = template.icon;
-                  return (
-                    <Card key={template.id} className="p-6 border-0 shadow-lg hover:shadow-xl transition-shadow">
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                            <IconComponent className="h-5 w-5 text-primary" />
-                          </div>
-                          <div>
-                            <h3 className="font-semibold text-navy-900">{template.title}</h3>
-                            <div className="flex items-center space-x-2 mt-1">
-                              <Badge variant="secondary">{template.type}</Badge>
-                              <span className="text-sm text-gray-500">{template.size}</span>
+            <div className="grid gap-12">
+              {/* Templates Section */}
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">Download Templates</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {templates.map((template) => {
+                    const IconComponent = template.icon;
+                    return (
+                      <Card key={template.id} className="p-6 border-0 shadow-lg hover:shadow-xl transition-shadow">
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                              <IconComponent className="h-5 w-5 text-primary" />
+                            </div>
+                            <div>
+                              <h3 className="font-semibold text-gray-900">{template.title}</h3>
+                              <div className="flex items-center space-x-2 mt-1">
+                                <Badge variant="secondary">{template.type}</Badge>
+                                <span className="text-sm text-gray-500 font-medium">{template.size}</span>
+                              </div>
                             </div>
                           </div>
+                          <div className="flex items-center space-x-2">
+                            <Button size="sm" className="font-medium">
+                              <Download className="h-4 w-4 mr-2" />
+                              Download
+                            </Button>
+                            <Button variant="ghost" size="sm" onClick={() => handleDelete(template.id)} className="text-red-500 hover:text-red-700">
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
-                        <Button size="sm">
-                          <Download className="h-4 w-4 mr-2" />
-                          Download
-                        </Button>
-                      </div>
-                      <p className="text-gray-600 text-sm">{template.description}</p>
-                    </Card>
-                  );
-                })}
-              </div>
-            </section>
-
-            {/* Guides Section */}
-            <section>
-              <h2 className="text-2xl font-bold text-navy-900 mb-6">Startup Guides</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {guides.map((guide, index) => (
-                  <Card key={index} className="p-6 border-0 shadow-lg hover:shadow-xl transition-shadow">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                        <BookOpen className="h-5 w-5 text-green-600" />
-                      </div>
-                      <Badge variant="outline">{guide.readTime}</Badge>
-                    </div>
-                    <h3 className="font-semibold text-navy-900 mb-2">{guide.title}</h3>
-                    <p className="text-gray-600 text-sm mb-4">{guide.description}</p>
-                    <Button variant="outline" size="sm" className="w-full">
-                      <ExternalLink className="h-4 w-4 mr-2" />
-                      Read Guide
-                    </Button>
-                  </Card>
-                ))}
-              </div>
-            </section>
-
-            {/* Upload Section */}
-            <section>
-              <Card className="p-8 border-0 shadow-lg bg-gradient-to-r from-primary/5 to-blue-50">
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Image className="h-8 w-8 text-primary" />
-                  </div>
-                  <h3 className="text-xl font-semibold text-navy-900 mb-2">Upload Your Own Resources</h3>
-                  <p className="text-gray-600 mb-6">
-                    Save your own templates, documents, and resources for easy access
-                  </p>
-                  <Button className="bg-primary hover:bg-primary/90">
-                    Upload Files
-                  </Button>
+                        <p className="text-gray-600 text-sm font-medium">{template.description}</p>
+                      </Card>
+                    );
+                  })}
                 </div>
-              </Card>
-            </section>
+              </section>
+
+              {/* Guides Section */}
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">Startup Guides</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {guides.map((guide, index) => (
+                    <Card key={index} className="p-6 border-0 shadow-lg hover:shadow-xl transition-shadow">
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                          <BookOpen className="h-5 w-5 text-green-600" />
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Badge variant="outline" className="font-medium">{guide.readTime}</Badge>
+                          <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-700">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      <h3 className="font-semibold text-gray-900 mb-2">{guide.title}</h3>
+                      <p className="text-gray-600 text-sm mb-4 font-medium">{guide.description}</p>
+                      <Button variant="outline" size="sm" className="w-full font-medium">
+                        <ExternalLink className="h-4 w-4 mr-2" />
+                        Read Guide
+                      </Button>
+                    </Card>
+                  ))}
+                </div>
+              </section>
+
+              {/* Upload Section */}
+              <section>
+                <Card className="p-8 border-0 shadow-lg bg-gradient-to-r from-primary/5 to-blue-50">
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Image className="h-8 w-8 text-primary" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">Upload Your Own Resources</h3>
+                    <p className="text-gray-600 mb-6 font-medium">
+                      Save your own templates, documents, and resources for easy access
+                    </p>
+                    <Button className="bg-primary hover:bg-primary/90 font-medium">
+                      Upload Files
+                    </Button>
+                  </div>
+                </Card>
+              </section>
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
   );
 };
