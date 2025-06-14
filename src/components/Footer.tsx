@@ -1,4 +1,6 @@
 
+import { Twitter, Linkedin, Github } from "lucide-react";
+
 export const Footer = () => {
   const footerSections = [{
     title: "Product",
@@ -13,7 +15,9 @@ export const Footer = () => {
     title: "Resources",
     links: ["Blog", "Case Studies", "Help Center", "API Docs", "Community"]
   }];
-  return <footer className="bg-navy-900 text-white py-16 px-6 lg:px-8">
+
+  return (
+    <footer className="bg-navy-900 text-white py-16 px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
           {/* Brand */}
@@ -27,30 +31,34 @@ export const Footer = () => {
             <div className="flex space-x-4">
               <a href="#" className="text-gray-400 hover:text-white transition-colors">
                 <span className="sr-only">Twitter</span>
-                🐦
+                <Twitter className="w-5 h-5" />
               </a>
               <a href="#" className="text-gray-400 hover:text-white transition-colors">
                 <span className="sr-only">LinkedIn</span>
-                💼
+                <Linkedin className="w-5 h-5" />
               </a>
               <a href="#" className="text-gray-400 hover:text-white transition-colors">
                 <span className="sr-only">GitHub</span>
-                🔗
+                <Github className="w-5 h-5" />
               </a>
             </div>
           </div>
           
           {/* Footer Links */}
-          {footerSections.map((section, index) => <div key={index}>
+          {footerSections.map((section, index) => (
+            <div key={index}>
               <h3 className="text-white font-semibold mb-4">{section.title}</h3>
               <ul className="space-y-3">
-                {section.links.map((link, linkIndex) => <li key={linkIndex}>
+                {section.links.map((link, linkIndex) => (
+                  <li key={linkIndex}>
                     <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm">
                       {link}
                     </a>
-                  </li>)}
+                  </li>
+                ))}
               </ul>
-            </div>)}
+            </div>
+          ))}
         </div>
         
         {/* Bottom Border */}
@@ -67,5 +75,6 @@ export const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>;
+    </footer>
+  );
 };

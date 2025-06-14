@@ -1,5 +1,6 @@
 
 import { Card } from "@/components/ui/card";
+import { Lightbulb, FileText } from "lucide-react";
 
 export const FeaturesSection = () => {
   return (
@@ -41,8 +42,8 @@ export const FeaturesSection = () => {
           <div className="space-y-8">
             <Card className="p-8 border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white">
               <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center text-white text-xl">
-                  💡
+                <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center text-white">
+                  <Lightbulb className="w-6 h-6" />
                 </div>
                 <h3 className="ml-4 text-2xl font-bold text-navy-900">AI Business Idea Generator</h3>
               </div>
@@ -53,8 +54,8 @@ export const FeaturesSection = () => {
             
             <Card className="p-8 border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white">
               <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xl">
-                  📋
+                <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white">
+                  <FileText className="w-6 h-6" />
                 </div>
                 <h3 className="ml-4 text-2xl font-bold text-navy-900">Business Plan Builder</h3>
               </div>

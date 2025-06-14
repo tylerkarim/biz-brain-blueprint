@@ -1,6 +1,7 @@
 
 import { Card } from "@/components/ui/card";
 import { useState, useEffect } from "react";
+import { Star } from "lucide-react";
 
 const testimonials = [
   {
@@ -57,7 +58,7 @@ export const TestimonialsSection = () => {
             <div className="mb-8">
               <div className="flex justify-center mb-4">
                 {[...Array(5)].map((_, i) => (
-                  <span key={i} className="text-2xl text-yellow-400">⭐</span>
+                  <Star key={i} className="w-6 h-6 text-yellow-400 fill-current" />
                 ))}
               </div>
               <blockquote className="text-xl md:text-2xl text-gray-700 font-medium leading-relaxed mb-8">

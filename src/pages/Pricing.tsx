@@ -3,6 +3,7 @@ import { Navigation } from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Check, Zap } from "lucide-react";
 
 const Pricing = () => {
   const plans = [
@@ -86,7 +87,7 @@ const Pricing = () => {
                 <ul className="space-y-3 mb-8">
                   {plan.features.map((feature, featureIndex) => (
                     <li key={featureIndex} className="flex items-center">
-                      <span className="text-green-500 mr-3">✓</span>
+                      <Check className="text-green-500 mr-3 w-4 h-4" />
                       <span className="text-gray-700">{feature}</span>
                     </li>
                   ))}
@@ -104,7 +105,10 @@ const Pricing = () => {
           {/* Special Offers */}
           <div className="text-center mb-16">
             <Card className="p-8 border-0 shadow-lg bg-gradient-to-r from-primary to-blue-600 text-white max-w-4xl mx-auto">
-              <h2 className="text-3xl font-bold mb-4">🎉 Early Bird Special</h2>
+              <div className="flex items-center justify-center mb-4">
+                <Zap className="w-8 h-8 mr-2" />
+                <h2 className="text-3xl font-bold">Early Bird Special</h2>
+              </div>
               <p className="text-xl mb-6">
                 Get lifetime access to BuildAura Pro for a one-time payment of $59. 
                 Limited time offer for our first 1000 customers!

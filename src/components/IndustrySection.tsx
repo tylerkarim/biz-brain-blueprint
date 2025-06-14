@@ -1,17 +1,18 @@
 
 import { Card } from "@/components/ui/card";
+import { Hospital, ShoppingCart } from "lucide-react";
 
 const industries = [
   {
     title: "Healthcare",
-    icon: "🏥",
+    icon: Hospital,
     description: "AI-powered healthcare delivery solutions with automated appointment scheduling and patient engagement.",
     companies: ["Johnson & Johnson", "Pfizer", "Mayo Clinic"],
     color: "from-blue-500 to-blue-600"
   },
   {
     title: "E-Commerce",
-    icon: "🛒",
+    icon: ShoppingCart,
     description: "Deliver tailored, contact-aware shopping experiences with scalable customer support automation.",
     companies: ["eBay", "Shopify", "Walmart"],
     color: "from-green-500 to-green-600"
@@ -39,8 +40,8 @@ export const IndustrySection = () => {
               className="p-8 border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 bg-gradient-to-br from-white to-gray-50"
             >
               <div className="flex items-center mb-6">
-                <div className={`w-16 h-16 bg-gradient-to-r ${industry.color} rounded-2xl flex items-center justify-center text-white text-2xl`}>
-                  {industry.icon}
+                <div className={`w-16 h-16 bg-gradient-to-r ${industry.color} rounded-2xl flex items-center justify-center text-white`}>
+                  <industry.icon className="w-8 h-8" />
                 </div>
                 <h3 className="ml-4 text-2xl font-bold text-navy-900">{industry.title}</h3>
               </div>
