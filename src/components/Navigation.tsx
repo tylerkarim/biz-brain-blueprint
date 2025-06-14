@@ -39,12 +39,12 @@ export const Navigation = () => {
           {isLandingPage && !user ? (
             <>
               <Link to="/login">
-                <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900 text-sm font-normal">
+                <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900 text-sm font-medium" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif' }}>
                   Log In
                 </Button>
               </Link>
               <Link to="/signup">
-                <Button size="sm" className="bg-primary hover:bg-primary/90 text-white text-sm font-normal">
+                <Button size="sm" className="bg-primary hover:bg-primary/90 text-white text-sm font-medium" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif' }}>
                   Sign Up
                 </Button>
               </Link>
