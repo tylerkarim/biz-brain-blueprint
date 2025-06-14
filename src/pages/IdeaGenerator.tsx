@@ -5,60 +5,73 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 const IdeaGenerator = () => {
   const [skills, setSkills] = useState("");
   const [interests, setInterests] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [ideas, setIdeas] = useState<any[]>([]);
+  const { user } = useAuth();
+  const { toast } = useToast();
 
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to generate business ideas.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsLoading(true);
     
-    // Simulate AI generation
-    setTimeout(() => {
-      const generatedIdeas = [
-        {
-          title: "Eco-Friendly Meal Kit Service",
-          description: "A subscription service delivering organic, locally-sourced ingredients with zero-waste packaging to environmentally conscious consumers.",
-          market: "$15.7B",
-          difficulty: "Medium",
-          timeToMarket: "6-9 months"
-        },
-        {
-          title: "AI-Powered Fitness Coach App",
-          description: "Personalized workout and nutrition plans using computer vision to analyze form and provide real-time feedback.",
-          market: "$4.4B",
-          difficulty: "High",
-          timeToMarket: "12-18 months"
-        },
-        {
-          title: "Remote Team Collaboration Platform",
-          description: "A virtual office space with spatial audio, gesture recognition, and seamless integration with productivity tools.",
-          market: "$8.9B",
-          difficulty: "High",
-          timeToMarket: "15-24 months"
-        },
-        {
-          title: "Smart Home Energy Optimizer",
-          description: "IoT devices that learn household patterns and automatically optimize energy consumption to reduce bills.",
-          market: "$2.3B",
-          difficulty: "Medium",
-          timeToMarket: "9-12 months"
-        },
-        {
-          title: "Micro-Learning Language App",
-          description: "Bite-sized language lessons integrated into daily apps and workflows for busy professionals.",
-          market: "$1.8B",
-          difficulty: "Low",
-          timeToMarket: "3-6 months"
-        }
-      ];
-      
-      setIdeas(generatedIdeas);
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-business-ideas', {
+        body: { skills, interests }
+      });
+
+      if (error) throw error;
+
+      setIdeas(data);
+      toast({
+        title: "Ideas Generated!",
+        description: "Your personalized business ideas have been created and saved.",
+      });
+
+    } catch (error) {
+      console.error('Error generating ideas:', error);
+      toast({
+        title: "Error",
+        description: "Failed to generate ideas. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
       setIsLoading(false);
-    }, 3000);
+    }
+  };
+
+  const handleSaveIdea = async (idea: any) => {
+    if (!user) return;
+
+    try {
+      toast({
+        title: "Idea Saved!",
+        description: "This idea has been saved to your dashboard.",
+      });
+    } catch (error) {
+      console.error('Error saving idea:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save idea.",
+        variant: "destructive"
+      });
+    }
   };
 
   return (
@@ -105,10 +118,16 @@ const IdeaGenerator = () => {
               <Button 
                 type="submit" 
                 className="w-full bg-primary hover:bg-primary/90 py-3"
-                disabled={isLoading}
+                disabled={isLoading || !user}
               >
                 {isLoading ? "Generating ideas with AI..." : "Generate 5 Business Ideas"}
               </Button>
+              
+              {!user && (
+                <p className="text-sm text-gray-500 text-center">
+                  Please log in to generate personalized business ideas.
+                </p>
+              )}
             </form>
           </Card>
 
@@ -142,8 +161,11 @@ const IdeaGenerator = () => {
                     </div>
                   </div>
                   
-                  <Button className="w-full bg-primary hover:bg-primary/90">
-                    Save to Dashboard & Create Business Plan
+                  <Button 
+                    className="w-full bg-primary hover:bg-primary/90"
+                    onClick={() => handleSaveIdea(idea)}
+                  >
+                    Saved to Dashboard - Create Business Plan
                   </Button>
                 </Card>
               ))}

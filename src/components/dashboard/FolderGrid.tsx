@@ -1,6 +1,9 @@
 
 import { FolderCard } from "./FolderCard";
 import { Lightbulb, FileText, Rocket, ListTodo, FileText as HistoryIcon, Folder } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 interface FolderGridProps {
   onFolderClick: (folderId: string) => void;
@@ -8,13 +11,40 @@ interface FolderGridProps {
 }
 
 export const FolderGrid = ({ onFolderClick, searchQuery }: FolderGridProps) => {
+  const { user } = useAuth();
+
+  const { data: folderCounts } = useQuery({
+    queryKey: ['folder-counts', user?.id],
+    queryFn: async () => {
+      if (!user) return {};
+
+      const [ideas, plans, assets, tasks, history] = await Promise.all([
+        supabase.from('business_ideas').select('id', { count: 'exact' }).eq('user_id', user.id),
+        supabase.from('business_plans').select('id', { count: 'exact' }).eq('user_id', user.id),
+        supabase.from('launch_assets').select('id', { count: 'exact' }).eq('user_id', user.id),
+        supabase.from('user_tasks').select('id', { count: 'exact' }).eq('user_id', user.id),
+        supabase.from('prompt_history').select('id', { count: 'exact' }).eq('user_id', user.id)
+      ]);
+
+      return {
+        'ai-ideas': ideas.count || 0,
+        'business-plans': plans.count || 0,
+        'launch-toolkit': assets.count || 0,
+        'tasks': tasks.count || 0,
+        'prompt-history': history.count || 0,
+        'resources': 0
+      };
+    },
+    enabled: !!user
+  });
+
   const folders = [
     {
       id: "ai-ideas",
       title: "AI Business Ideas",
       description: "Generate and save startup ideas",
       icon: Lightbulb,
-      count: 0,
+      count: folderCounts?.['ai-ideas'] || 0,
       countLabel: "ideas",
       href: "/tools/idea-generator"
     },
@@ -23,7 +53,7 @@ export const FolderGrid = ({ onFolderClick, searchQuery }: FolderGridProps) => {
       title: "Business Plans",
       description: "AI-generated business plans and canvas",
       icon: FileText,
-      count: 0,
+      count: folderCounts?.['business-plans'] || 0,
       countLabel: "plans",
       href: "/tools/business-plan"
     },
@@ -32,7 +62,7 @@ export const FolderGrid = ({ onFolderClick, searchQuery }: FolderGridProps) => {
       title: "Launch Toolkit",
       description: "Logo ideas, domains, and branding",
       icon: Rocket,
-      count: 0,
+      count: folderCounts?.['launch-toolkit'] || 0,
       countLabel: "assets",
       href: "/tools/launch-toolkit"
     },
@@ -41,7 +71,7 @@ export const FolderGrid = ({ onFolderClick, searchQuery }: FolderGridProps) => {
       title: "Tasks",
       description: "Weekly goals and action items",
       icon: ListTodo,
-      count: 0,
+      count: folderCounts?.['tasks'] || 0,
       countLabel: "pending",
       href: "/dashboard/tasks"
     },
@@ -50,7 +80,7 @@ export const FolderGrid = ({ onFolderClick, searchQuery }: FolderGridProps) => {
       title: "Prompt History",
       description: "All your AI interactions",
       icon: HistoryIcon,
-      count: 0,
+      count: folderCounts?.['prompt-history'] || 0,
       countLabel: "prompts",
       href: "/prompt-history"
     },
@@ -88,7 +118,22 @@ export const FolderGrid = ({ onFolderClick, searchQuery }: FolderGridProps) => {
         </div>
       )}
       
-      {filteredFolders.length > 0 && searchQuery === "" && (
+      {filteredFolders.length > 0 && searchQuery === "" && !user && (
+        <div className="mt-12 text-center">
+          <div className="bg-white rounded-lg border border-gray-200 p-8 max-w-md mx-auto">
+            <h3 className="text-lg font-semibold text-navy-900 mb-2">Ready to get started?</h3>
+            <p className="text-gray-600 mb-4">Please log in to start generating AI-powered business content.</p>
+            <button
+              onClick={() => window.location.href = '/login'}
+              className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors"
+            >
+              Log In to Start
+            </button>
+          </div>
+        </div>
+      )}
+      
+      {filteredFolders.length > 0 && searchQuery === "" && user && (
         <div className="mt-12 text-center">
           <div className="bg-white rounded-lg border border-gray-200 p-8 max-w-md mx-auto">
             <h3 className="text-lg font-semibold text-navy-900 mb-2">Ready to get started?</h3>

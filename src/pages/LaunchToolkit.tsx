@@ -5,42 +5,55 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 const LaunchToolkit = () => {
   const [businessName, setBusinessName] = useState("");
   const [industry, setIndustry] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState<any>(null);
+  const { user } = useAuth();
+  const { toast } = useToast();
 
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to generate launch assets.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsLoading(true);
     
-    // Simulate AI generation
-    setTimeout(() => {
-      const generatedResults = {
-        logoIdeas: [
-          { concept: "Modern geometric design with blue gradient", style: "Minimalist" },
-          { concept: "Circular emblem with tech-inspired iconography", style: "Professional" },
-          { concept: "Abstract letter mark with dynamic elements", style: "Creative" }
-        ],
-        nameIdeas: [
-          { name: "TechFlow", domain: "techflow.com", available: false },
-          { name: "BuildWise", domain: "buildwise.com", available: true },
-          { name: "LaunchGrid", domain: "launchgrid.com", available: true },
-          { name: "StartupHub", domain: "startuphub.com", available: false },
-          { name: "IdeaForge", domain: "ideaforge.com", available: true }
-        ],
-        brandColors: [
-          { name: "Primary Blue", hex: "#3F82F9", usage: "Main brand color" },
-          { name: "Deep Navy", hex: "#0F172A", usage: "Text and headers" },
-          { name: "Light Gray", hex: "#F8FAFC", usage: "Backgrounds" }
-        ]
-      };
-      
-      setResults(generatedResults);
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-launch-toolkit', {
+        body: { businessName, industry }
+      });
+
+      if (error) throw error;
+
+      setResults(data);
+      toast({
+        title: "Launch Assets Generated!",
+        description: "Your brand assets have been created and saved to your dashboard.",
+      });
+
+    } catch (error) {
+      console.error('Error generating launch toolkit:', error);
+      toast({
+        title: "Error",
+        description: "Failed to generate launch assets. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
       setIsLoading(false);
-    }, 4000);
+    }
   };
 
   return (
@@ -89,10 +102,16 @@ const LaunchToolkit = () => {
               <Button 
                 type="submit" 
                 className="w-full bg-primary hover:bg-primary/90 py-3"
-                disabled={isLoading}
+                disabled={isLoading || !user}
               >
                 {isLoading ? "Generating brand assets with AI..." : "Generate Launch Toolkit"}
               </Button>
+              
+              {!user && (
+                <p className="text-sm text-gray-500 text-center">
+                  Please log in to generate launch assets.
+                </p>
+              )}
             </form>
           </Card>
 
@@ -102,7 +121,7 @@ const LaunchToolkit = () => {
               <div>
                 <h2 className="text-3xl font-bold text-navy-900 mb-8">Logo Concepts</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {results.logoIdeas.map((logo: any, index: number) => (
+                  {results.logoIdeas?.map((logo: any, index: number) => (
                     <Card key={index} className="p-6 border-0 shadow-lg">
                       <div className="w-full h-32 bg-gradient-to-br from-primary to-blue-600 rounded-lg mb-4 flex items-center justify-center">
                         <span className="text-white text-2xl font-bold">{businessName?.slice(0, 2).toUpperCase() || "LO"}</span>
@@ -118,7 +137,7 @@ const LaunchToolkit = () => {
               <div>
                 <h2 className="text-3xl font-bold text-navy-900 mb-8">Name Suggestions</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {results.nameIdeas.map((name: any, index: number) => (
+                  {results.nameIdeas?.map((name: any, index: number) => (
                     <Card key={index} className="p-6 border-0 shadow-lg">
                       <div className="flex justify-between items-center">
                         <div>
@@ -138,7 +157,7 @@ const LaunchToolkit = () => {
               <div>
                 <h2 className="text-3xl font-bold text-navy-900 mb-8">Brand Color Palette</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {results.brandColors.map((color: any, index: number) => (
+                  {results.brandColors?.map((color: any, index: number) => (
                     <Card key={index} className="p-6 border-0 shadow-lg">
                       <div 
                         className="w-full h-20 rounded-lg mb-4"
@@ -154,7 +173,7 @@ const LaunchToolkit = () => {
 
               <div className="text-center">
                 <Button className="bg-primary hover:bg-primary/90 px-8 py-3">
-                  Save All Assets to Dashboard
+                  Assets Saved to Dashboard
                 </Button>
               </div>
             </div>

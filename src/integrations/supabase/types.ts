@@ -9,7 +9,192 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      business_ideas: {
+        Row: {
+          created_at: string
+          description: string
+          difficulty: string | null
+          id: string
+          interests_input: string | null
+          market_size: string | null
+          skills_input: string | null
+          time_to_market: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          difficulty?: string | null
+          id?: string
+          interests_input?: string | null
+          market_size?: string | null
+          skills_input?: string | null
+          time_to_market?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          difficulty?: string | null
+          id?: string
+          interests_input?: string | null
+          market_size?: string | null
+          skills_input?: string | null
+          time_to_market?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      business_plans: {
+        Row: {
+          business_name: string
+          competition: string | null
+          created_at: string
+          id: string
+          industry: string | null
+          plan_content: Json | null
+          problem: string | null
+          revenue_model: string | null
+          solution: string | null
+          target_market: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          business_name: string
+          competition?: string | null
+          created_at?: string
+          id?: string
+          industry?: string | null
+          plan_content?: Json | null
+          problem?: string | null
+          revenue_model?: string | null
+          solution?: string | null
+          target_market?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          business_name?: string
+          competition?: string | null
+          created_at?: string
+          id?: string
+          industry?: string | null
+          plan_content?: Json | null
+          problem?: string | null
+          revenue_model?: string | null
+          solution?: string | null
+          target_market?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      launch_assets: {
+        Row: {
+          brand_colors: Json | null
+          business_name: string
+          created_at: string
+          id: string
+          industry: string | null
+          logo_concepts: Json | null
+          name_suggestions: Json | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          brand_colors?: Json | null
+          business_name: string
+          created_at?: string
+          id?: string
+          industry?: string | null
+          logo_concepts?: Json | null
+          name_suggestions?: Json | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          brand_colors?: Json | null
+          business_name?: string
+          created_at?: string
+          id?: string
+          industry?: string | null
+          logo_concepts?: Json | null
+          name_suggestions?: Json | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      prompt_history: {
+        Row: {
+          created_at: string
+          id: string
+          prompt: string
+          response: string
+          tool_name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          prompt: string
+          response: string
+          tool_name: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          prompt?: string
+          response?: string
+          tool_name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_tasks: {
+        Row: {
+          completed: boolean | null
+          created_at: string
+          description: string | null
+          due_date: string | null
+          id: string
+          priority: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean | null
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          priority?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed?: boolean | null
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          priority?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
