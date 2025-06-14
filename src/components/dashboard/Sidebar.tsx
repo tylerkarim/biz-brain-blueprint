@@ -8,9 +8,12 @@ import {
   Rocket, 
   ListTodo, 
   History, 
-  Folder 
+  Folder,
+  DollarSign,
+  LogOut
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/contexts/AuthContext";
 
 const navigationItems = [
   {
@@ -47,11 +50,21 @@ const navigationItems = [
     label: "Resources",
     path: "/resources",
     icon: Folder
+  },
+  {
+    label: "Pricing",
+    path: "/pricing",
+    icon: DollarSign
   }
 ];
 
 export const Sidebar = () => {
   const location = useLocation();
+  const { signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
 
   return (
     <div className="w-64 bg-blue-600 text-white min-h-screen flex flex-col">
@@ -82,6 +95,17 @@ export const Sidebar = () => {
               </li>
             );
           })}
+          
+          {/* Sign Out Button */}
+          <li>
+            <button
+              onClick={handleSignOut}
+              className="flex items-center space-x-3 px-3 py-2 rounded-lg text-sm transition-colors text-blue-100 hover:bg-blue-500 hover:text-white w-full text-left"
+            >
+              <LogOut className="h-4 w-4" />
+              <span>Sign Out</span>
+            </button>
+          </li>
         </ul>
       </nav>
       
