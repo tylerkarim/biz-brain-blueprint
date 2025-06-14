@@ -1,10 +1,9 @@
-
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   Lightbulb, 
   FileText, 
@@ -25,6 +24,53 @@ interface DashboardSidebarProps {
 export const DashboardSidebar = ({ activeSection, onSectionChange }: DashboardSidebarProps) => {
   const { user } = useAuth();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const queryClient = useQueryClient();
+
+  // Set up real-time subscriptions to invalidate counts when data changes
+  useEffect(() => {
+    if (!user) return;
+
+    const channels = [
+      supabase
+        .channel('business_ideas_changes')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'business_ideas' }, () => {
+          queryClient.invalidateQueries({ queryKey: ['dashboard-counts', user.id] });
+        })
+        .subscribe(),
+
+      supabase
+        .channel('business_plans_changes')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'business_plans' }, () => {
+          queryClient.invalidateQueries({ queryKey: ['dashboard-counts', user.id] });
+        })
+        .subscribe(),
+
+      supabase
+        .channel('launch_assets_changes')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'launch_assets' }, () => {
+          queryClient.invalidateQueries({ queryKey: ['dashboard-counts', user.id] });
+        })
+        .subscribe(),
+
+      supabase
+        .channel('user_tasks_changes')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'user_tasks' }, () => {
+          queryClient.invalidateQueries({ queryKey: ['dashboard-counts', user.id] });
+        })
+        .subscribe(),
+
+      supabase
+        .channel('prompt_history_changes')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'prompt_history' }, () => {
+          queryClient.invalidateQueries({ queryKey: ['dashboard-counts', user.id] });
+        })
+        .subscribe()
+    ];
+
+    return () => {
+      channels.forEach(channel => supabase.removeChannel(channel));
+    };
+  }, [user, queryClient]);
 
   // Fetch counts for each section
   const { data: counts } = useQuery({
