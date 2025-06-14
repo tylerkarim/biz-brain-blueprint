@@ -33,7 +33,7 @@ const Dashboard = () => {
     setActiveSection('overview');
   };
 
-  // Render active tool flow
+  // Render active tool flow - these should take full screen without sidebar
   if (activeTool === 'idea-generator') {
     return <IdeaGeneratorFlow onBack={handleBackToDashboard} />;
   }
@@ -47,7 +47,14 @@ const Dashboard = () => {
   }
 
   if (activeTool === 'tasks') {
-    return <TasksFlow onBack={handleBackToDashboard} />;
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navigation />
+        <div className="pt-16">
+          <TasksFlow onBack={handleBackToDashboard} />
+        </div>
+      </div>
+    );
   }
 
   return (

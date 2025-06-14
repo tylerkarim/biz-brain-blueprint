@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -278,48 +277,46 @@ export const TasksFlow = ({ onBack }: TasksFlowProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto p-6">
-        <div className="flex items-center mb-8">
-          <Button
-            variant="ghost"
-            onClick={onBack}
-            className="mr-4"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Go Back
-          </Button>
-          
-          {currentStep < 4 && (
-            <div className="flex items-center text-sm text-gray-500">
-              Step {currentStep} of 3
-            </div>
-          )}
-        </div>
-
-        <Card className="p-8 border-0 shadow-lg">
-          {renderStep()}
-          
-          {currentStep < 4 && (
-            <div className="flex justify-between mt-8">
-              <Button
-                variant="outline"
-                onClick={() => setCurrentStep(Math.max(1, currentStep - 1))}
-                disabled={currentStep === 1}
-              >
-                Previous
-              </Button>
-              <Button
-                onClick={currentStep === 3 ? generateTasks : () => setCurrentStep(currentStep + 1)}
-                disabled={isLoading}
-                className="bg-primary hover:bg-primary/90"
-              >
-                {isLoading ? "Generating Tasks..." : currentStep === 3 ? "Generate Action Plan" : "Next"}
-              </Button>
-            </div>
-          )}
-        </Card>
+    <div className="max-w-4xl mx-auto p-6">
+      <div className="flex items-center mb-8">
+        <Button
+          variant="ghost"
+          onClick={onBack}
+          className="mr-4"
+        >
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Go Back
+        </Button>
+        
+        {currentStep < 4 && (
+          <div className="flex items-center text-sm text-gray-500">
+            Step {currentStep} of 3
+          </div>
+        )}
       </div>
+
+      <Card className="p-8 border-0 shadow-lg">
+        {renderStep()}
+        
+        {currentStep < 4 && (
+          <div className="flex justify-between mt-8">
+            <Button
+              variant="outline"
+              onClick={() => setCurrentStep(Math.max(1, currentStep - 1))}
+              disabled={currentStep === 1}
+            >
+              Previous
+            </Button>
+            <Button
+              onClick={currentStep === 3 ? generateTasks : () => setCurrentStep(currentStep + 1)}
+              disabled={isLoading}
+              className="bg-primary hover:bg-primary/90"
+            >
+              {isLoading ? "Generating Tasks..." : currentStep === 3 ? "Generate Action Plan" : "Next"}
+            </Button>
+          </div>
+        )}
+      </Card>
     </div>
   );
 };
