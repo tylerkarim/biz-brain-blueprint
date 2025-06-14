@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -9,7 +10,7 @@ export const Navigation = () => {
 
   const handleSignOut = async () => {
     await signOut();
-    navigate('/signup');
+    navigate('/');
   };
 
   // Determine the home route based on authentication status
