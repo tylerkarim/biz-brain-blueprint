@@ -1,6 +1,7 @@
-
 import { useState } from "react";
 import { Navigation } from "@/components/Navigation";
+import { Sidebar } from "@/components/dashboard/Sidebar";
+import { IdeasTable } from "@/components/ideas/IdeasTable";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -17,7 +18,7 @@ const IdeaGenerator = () => {
   const { user } = useAuth();
   const { toast } = useToast();
 
-  const handleGenerate = async (e: React.FormEvent) => {
+  const handleGenerateIdeas = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!user) {
@@ -78,101 +79,68 @@ const IdeaGenerator = () => {
     <div className="min-h-screen bg-gray-50">
       <Navigation />
       
-      <main className="pt-24 pb-16 px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-navy-900 mb-4">AI Business Idea Generator</h1>
-            <p className="text-xl text-gray-600">Get 5 personalized startup ideas based on your skills and interests</p>
-          </div>
-
-          <Card className="p-8 mb-12 border-0 shadow-lg">
-            <form onSubmit={handleGenerate} className="space-y-6">
+      <div className="pt-16 flex">
+        <Sidebar />
+        
+        <main className="flex-1 bg-white">
+          <div className="p-6">
+            <div className="flex justify-between items-center mb-6">
               <div>
-                <label htmlFor="skills" className="block text-sm font-medium text-gray-700 mb-2">
-                  What are your skills? (e.g., programming, marketing, design)
-                </label>
-                <Input
-                  id="skills"
-                  value={skills}
-                  onChange={(e) => setSkills(e.target.value)}
-                  placeholder="JavaScript, UI/UX design, digital marketing..."
-                  required
-                  className="w-full"
+                <h1 className="text-2xl font-bold text-gray-900">AI Business Ideas</h1>
+                <p className="text-gray-600">{ideas?.length || 0} ideas found</p>
+              </div>
+              <div className="flex space-x-2">
+                <select className="px-3 py-2 border rounded-lg text-sm">
+                  <option>All status</option>
+                  <option>New</option>
+                  <option>Drafted</option>
+                </select>
+                <input 
+                  type="text" 
+                  placeholder="Search ideas..."
+                  className="px-3 py-2 border rounded-lg text-sm w-64"
                 />
               </div>
-
-              <div>
-                <label htmlFor="interests" className="block text-sm font-medium text-gray-700 mb-2">
-                  What are you passionate about? (e.g., sustainability, fitness, education)
-                </label>
-                <Input
-                  id="interests"
-                  value={interests}
-                  onChange={(e) => setInterests(e.target.value)}
-                  placeholder="Environmental protection, health & wellness, productivity..."
-                  required
-                  className="w-full"
-                />
-              </div>
-
-              <Button 
-                type="submit" 
-                className="w-full bg-primary hover:bg-primary/90 py-3"
-                disabled={isLoading || !user}
-              >
-                {isLoading ? "Generating ideas with AI..." : "Generate 5 Business Ideas"}
-              </Button>
-              
-              {!user && (
-                <p className="text-sm text-gray-500 text-center">
-                  Please log in to generate personalized business ideas.
-                </p>
-              )}
-            </form>
-          </Card>
-
-          {ideas.length > 0 && (
-            <div className="space-y-8">
-              <h2 className="text-3xl font-bold text-navy-900 text-center">Your Personalized Business Ideas</h2>
-              
-              {ideas.map((idea, index) => (
-                <Card key={index} className="p-8 border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-                  <div className="flex justify-between items-start mb-4">
-                    <h3 className="text-2xl font-bold text-navy-900">{idea.title}</h3>
-                    <Badge variant={idea.difficulty === 'Low' ? 'secondary' : idea.difficulty === 'Medium' ? 'default' : 'destructive'}>
-                      {idea.difficulty}
-                    </Badge>
-                  </div>
-                  
-                  <p className="text-gray-600 text-lg mb-6 leading-relaxed">{idea.description}</p>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    <div className="text-center p-4 bg-blue-50 rounded-lg">
-                      <div className="text-2xl font-bold text-primary">{idea.market}</div>
-                      <div className="text-sm text-gray-600">Market Size</div>
-                    </div>
-                    <div className="text-center p-4 bg-green-50 rounded-lg">
-                      <div className="text-2xl font-bold text-green-600">{idea.timeToMarket}</div>
-                      <div className="text-sm text-gray-600">Time to Market</div>
-                    </div>
-                    <div className="text-center p-4 bg-purple-50 rounded-lg">
-                      <div className="text-2xl font-bold text-purple-600">#{index + 1}</div>
-                      <div className="text-sm text-gray-600">Idea Rank</div>
-                    </div>
-                  </div>
-                  
-                  <Button 
-                    className="w-full bg-primary hover:bg-primary/90"
-                    onClick={() => handleSaveIdea(idea)}
-                  >
-                    Saved to Dashboard - Create Business Plan
-                  </Button>
-                </Card>
-              ))}
             </div>
-          )}
-        </div>
-      </main>
+
+            {/* Generate Ideas Form */}
+            <div className="mb-6 p-4 border rounded-lg bg-blue-50">
+              <h3 className="font-semibold mb-3">Generate New Ideas</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Your Skills</label>
+                  <input
+                    type="text"
+                    value={skills}
+                    onChange={(e) => setSkills(e.target.value)}
+                    placeholder="e.g., Programming, Marketing, Design"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Your Interests</label>
+                  <input
+                    type="text"
+                    value={interests}
+                    onChange={(e) => setInterests(e.target.value)}
+                    placeholder="e.g., Health, Technology, Education"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                  />
+                </div>
+              </div>
+              <Button 
+                onClick={handleGenerateIdeas} 
+                disabled={isLoading || !skills.trim() || !interests.trim()}
+                className="w-full md:w-auto"
+              >
+                {isLoading ? 'Generating Ideas...' : 'Generate AI Ideas'}
+              </Button>
+            </div>
+
+            <IdeasTable />
+          </div>
+        </main>
+      </div>
     </div>
   );
 };
