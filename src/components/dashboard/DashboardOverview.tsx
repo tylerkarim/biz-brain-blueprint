@@ -1,37 +1,33 @@
+
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Lightbulb, FileText, Rocket, CheckSquare, History, FolderOpen, Plus, ArrowRight } from "lucide-react";
+import { WeeklyPerformanceChart } from "./WeeklyPerformanceChart";
+
 interface DashboardOverviewProps {
   onToolStart: (toolName: string) => void;
 }
+
 export const DashboardOverview = ({
   onToolStart
 }: DashboardOverviewProps) => {
-  const {
-    user
-  } = useAuth();
+  const { user } = useAuth();
 
   // Fetch counts for each section
-  const {
-    data: counts
-  } = useQuery({
+  const { data: counts } = useQuery({
     queryKey: ['dashboard-counts', user?.id],
     queryFn: async () => {
       if (!user) return {};
-      const [ideas, plans, assets, tasks, history] = await Promise.all([supabase.from('business_ideas').select('id', {
-        count: 'exact'
-      }).eq('user_id', user.id), supabase.from('business_plans').select('id', {
-        count: 'exact'
-      }).eq('user_id', user.id), supabase.from('launch_assets').select('id', {
-        count: 'exact'
-      }).eq('user_id', user.id), supabase.from('user_tasks').select('id', {
-        count: 'exact'
-      }).eq('user_id', user.id), supabase.from('prompt_history').select('id', {
-        count: 'exact'
-      }).eq('user_id', user.id)]);
+      const [ideas, plans, assets, tasks, history] = await Promise.all([
+        supabase.from('business_ideas').select('id', { count: 'exact' }).eq('user_id', user.id),
+        supabase.from('business_plans').select('id', { count: 'exact' }).eq('user_id', user.id),
+        supabase.from('launch_assets').select('id', { count: 'exact' }).eq('user_id', user.id),
+        supabase.from('user_tasks').select('id', { count: 'exact' }).eq('user_id', user.id),
+        supabase.from('prompt_history').select('id', { count: 'exact' }).eq('user_id', user.id)
+      ]);
       return {
         ideas: ideas.count || 0,
         plans: plans.count || 0,
@@ -42,52 +38,66 @@ export const DashboardOverview = ({
     },
     enabled: !!user
   });
-  const tools = [{
-    id: 'idea-generator',
-    title: 'AI Business Ideas',
-    description: 'Generate validated startup ideas',
-    icon: Lightbulb,
-    count: counts?.ideas || 0,
-    color: 'bg-blue-50 text-blue-600',
-    iconColor: 'text-blue-600'
-  }, {
-    id: 'business-plan',
-    title: 'Business Plans',
-    description: 'Create comprehensive business plans',
-    icon: FileText,
-    count: counts?.plans || 0,
-    color: 'bg-green-50 text-green-600',
-    iconColor: 'text-green-600'
-  }, {
-    id: 'launch-toolkit',
-    title: 'Launch Toolkit',
-    description: 'Brand assets and launch materials',
-    icon: Rocket,
-    count: counts?.assets || 0,
-    color: 'bg-purple-50 text-purple-600',
-    iconColor: 'text-purple-600'
-  }, {
-    id: 'tasks',
-    title: 'Tasks',
-    description: 'Action items and milestones',
-    icon: CheckSquare,
-    count: counts?.tasks || 0,
-    color: 'bg-orange-50 text-orange-600',
-    iconColor: 'text-orange-600'
-  }];
-  return <div className="p-6">
+
+  const tools = [
+    {
+      id: 'idea-generator',
+      title: 'AI Business Ideas',
+      description: 'Generate validated startup ideas',
+      icon: Lightbulb,
+      count: counts?.ideas || 0,
+      color: 'bg-blue-50 text-blue-600',
+      iconColor: 'text-blue-600'
+    },
+    {
+      id: 'business-plan',
+      title: 'Business Plans',
+      description: 'Create comprehensive business plans',
+      icon: FileText,
+      count: counts?.plans || 0,
+      color: 'bg-green-50 text-green-600',
+      iconColor: 'text-green-600'
+    },
+    {
+      id: 'launch-toolkit',
+      title: 'Launch Toolkit',
+      description: 'Brand assets and launch materials',
+      icon: Rocket,
+      count: counts?.assets || 0,
+      color: 'bg-purple-50 text-purple-600',
+      iconColor: 'text-purple-600'
+    },
+    {
+      id: 'tasks',
+      title: 'Tasks',
+      description: 'Action items and milestones',
+      icon: CheckSquare,
+      count: counts?.tasks || 0,
+      color: 'bg-orange-50 text-orange-600',
+      iconColor: 'text-orange-600'
+    }
+  ];
+
+  return (
+    <div className="p-4 md:p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-2xl font-medium text-gray-900 mb-2">Dashboard</h1>
+        <div className="mb-6 md:mb-8">
+          <h1 className="text-xl md:text-2xl font-medium text-gray-900 mb-2">Dashboard</h1>
           <p className="text-gray-600 text-sm">Manage your business ideas and projects</p>
         </div>
 
+        {/* Weekly Performance Chart */}
+        <div className="mb-6 md:mb-8">
+          <WeeklyPerformanceChart />
+        </div>
+
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 md:mb-8">
           {tools.map(tool => {
-          const IconComponent = tool.icon;
-          return <div key={tool.id} className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-sm transition-shadow">
+            const IconComponent = tool.icon;
+            return (
+              <div key={tool.id} className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-sm transition-shadow">
                 <div className="flex items-center justify-between mb-3">
                   <div className={`w-10 h-10 rounded-lg ${tool.color} flex items-center justify-center`}>
                     <IconComponent className={`h-5 w-5 ${tool.iconColor}`} />
@@ -98,9 +108,9 @@ export const DashboardOverview = ({
                 </div>
                 <h3 className="font-medium text-gray-900 text-sm mb-1">{tool.title}</h3>
                 <p className="text-gray-500 text-xs mb-3">{tool.description}</p>
-                
-              </div>;
-        })}
+              </div>
+            );
+          })}
         </div>
 
         {/* Recent Activity */}
@@ -119,5 +129,6 @@ export const DashboardOverview = ({
           </div>
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
