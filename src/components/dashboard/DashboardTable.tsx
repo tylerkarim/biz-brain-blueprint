@@ -55,7 +55,7 @@ export const DashboardTable = ({ section, onBack, onToolStart }: DashboardTableP
           return {
             title: 'AI Business Ideas',
             items: ideas || [],
-            columns: ['ID', 'Idea Name', 'Industry', 'Created Date', 'Status', 'Actions']
+            columns: ['ID', 'Name', 'Industry', 'Date', 'Status', 'Actions']
           };
 
         case 'plans':
@@ -68,7 +68,7 @@ export const DashboardTable = ({ section, onBack, onToolStart }: DashboardTableP
           return {
             title: 'Business Plans',
             items: plans || [],
-            columns: ['ID', 'Plan Title', 'Based on Idea', 'Created', 'Status', 'Actions']
+            columns: ['ID', 'Name', 'Based on', 'Date', 'Status', 'Actions']
           };
 
         case 'launch':
@@ -81,7 +81,7 @@ export const DashboardTable = ({ section, onBack, onToolStart }: DashboardTableP
           return {
             title: 'Launch Toolkit',
             items: assets || [],
-            columns: ['ID', 'Business Name', 'Assets', 'Created Date', 'Status', 'Actions']
+            columns: ['ID', 'Business Name', 'Assets', 'Date', 'Status', 'Actions']
           };
 
         case 'tasks':
@@ -94,7 +94,7 @@ export const DashboardTable = ({ section, onBack, onToolStart }: DashboardTableP
           return {
             title: 'Tasks',
             items: tasks || [],
-            columns: ['Task ID', 'Description', 'Due Date', 'Priority', 'Status', 'Actions']
+            columns: ['ID', 'Description', 'Due Date', 'Priority', 'Status', 'Actions']
           };
 
         case 'history':
@@ -107,7 +107,7 @@ export const DashboardTable = ({ section, onBack, onToolStart }: DashboardTableP
           return {
             title: 'Prompt History',
             items: history || [],
-            columns: ['Prompt ID', 'Tool Used', 'Summary', 'Date', 'Status', 'Actions']
+            columns: ['ID', 'Tool', 'Summary', 'Date', 'Status', 'Actions']
           };
 
         default:
@@ -152,62 +152,79 @@ export const DashboardTable = ({ section, onBack, onToolStart }: DashboardTableP
   };
 
   const renderRowData = (item: any, index: number) => {
-    const formatDate = (date: string) => new Date(date).toLocaleDateString();
+    const formatDate = (date: string) => new Date(date).toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric',
+      year: 'numeric'
+    });
     const itemId = `#${(index + 1).toString().padStart(3, '0')}`;
 
     switch (section) {
       case 'ideas':
         return (
           <>
-            <TableCell className="font-mono text-sm">{itemId}</TableCell>
-            <TableCell className="font-medium">{item.title}</TableCell>
-            <TableCell><Badge variant="outline">Startup</Badge></TableCell>
-            <TableCell>{formatDate(item.created_at)}</TableCell>
-            <TableCell><Badge variant="secondary">New</Badge></TableCell>
+            <TableCell className="font-mono text-xs text-gray-500">{itemId}</TableCell>
+            <TableCell className="font-medium text-sm">{item.title}</TableCell>
+            <TableCell><Badge variant="outline" className="text-xs">Startup</Badge></TableCell>
+            <TableCell className="text-sm text-gray-600">{formatDate(item.created_at)}</TableCell>
+            <TableCell><Badge variant="secondary" className="text-xs">New</Badge></TableCell>
           </>
         );
 
       case 'plans':
         return (
           <>
-            <TableCell className="font-mono text-sm">#{(index + 201).toString()}</TableCell>
-            <TableCell className="font-medium">{item.business_name}</TableCell>
-            <TableCell>{item.business_name}</TableCell>
-            <TableCell>{formatDate(item.created_at)}</TableCell>
-            <TableCell><Badge variant="default">Complete</Badge></TableCell>
+            <TableCell className="font-mono text-xs text-gray-500">{itemId}</TableCell>
+            <TableCell className="font-medium text-sm">{item.business_name}</TableCell>
+            <TableCell className="text-sm text-gray-600">{item.business_name}</TableCell>
+            <TableCell className="text-sm text-gray-600">{formatDate(item.created_at)}</TableCell>
+            <TableCell><Badge className="text-xs bg-green-100 text-green-700 hover:bg-green-100">Complete</Badge></TableCell>
           </>
         );
 
       case 'launch':
         return (
           <>
-            <TableCell className="font-mono text-sm">#{(index + 301).toString()}</TableCell>
-            <TableCell className="font-medium">{item.business_name}</TableCell>
-            <TableCell><Badge variant="outline">Logo, Colors, Name</Badge></TableCell>
-            <TableCell>{formatDate(item.created_at)}</TableCell>
-            <TableCell><Badge variant="default">Ready</Badge></TableCell>
+            <TableCell className="font-mono text-xs text-gray-500">{itemId}</TableCell>
+            <TableCell className="font-medium text-sm">{item.business_name}</TableCell>
+            <TableCell><Badge variant="outline" className="text-xs">Logo, Colors</Badge></TableCell>
+            <TableCell className="text-sm text-gray-600">{formatDate(item.created_at)}</TableCell>
+            <TableCell><Badge className="text-xs bg-blue-100 text-blue-700 hover:bg-blue-100">Ready</Badge></TableCell>
           </>
         );
 
       case 'tasks':
         return (
           <>
-            <TableCell className="font-mono text-sm">T-{(index + 1).toString().padStart(2, '0')}</TableCell>
-            <TableCell className="font-medium">{item.title}</TableCell>
-            <TableCell>{item.due_date ? formatDate(item.due_date) : 'No date'}</TableCell>
-            <TableCell><Badge variant={item.priority === 'high' ? 'destructive' : 'outline'}>{item.priority}</Badge></TableCell>
-            <TableCell><Badge variant={item.completed ? 'default' : 'secondary'}>{item.completed ? 'Complete' : 'Pending'}</Badge></TableCell>
+            <TableCell className="font-mono text-xs text-gray-500">{itemId}</TableCell>
+            <TableCell className="font-medium text-sm">{item.title}</TableCell>
+            <TableCell className="text-sm text-gray-600">{item.due_date ? formatDate(item.due_date) : '-'}</TableCell>
+            <TableCell>
+              <Badge 
+                variant={item.priority === 'high' ? 'destructive' : 'outline'} 
+                className="text-xs"
+              >
+                {item.priority}
+              </Badge>
+            </TableCell>
+            <TableCell>
+              <Badge 
+                className={`text-xs ${item.completed ? 'bg-green-100 text-green-700 hover:bg-green-100' : 'bg-gray-100 text-gray-700 hover:bg-gray-100'}`}
+              >
+                {item.completed ? 'Complete' : 'Pending'}
+              </Badge>
+            </TableCell>
           </>
         );
 
       case 'history':
         return (
           <>
-            <TableCell className="font-mono text-sm">#{(index + 9001).toString()}</TableCell>
-            <TableCell className="font-medium">{item.tool_name}</TableCell>
-            <TableCell className="max-w-xs truncate">{item.prompt.substring(0, 50)}...</TableCell>
-            <TableCell>{formatDate(item.created_at)}</TableCell>
-            <TableCell><Badge variant="outline">Completed</Badge></TableCell>
+            <TableCell className="font-mono text-xs text-gray-500">{itemId}</TableCell>
+            <TableCell className="font-medium text-sm">{item.tool_name}</TableCell>
+            <TableCell className="max-w-xs truncate text-sm text-gray-600">{item.prompt.substring(0, 40)}...</TableCell>
+            <TableCell className="text-sm text-gray-600">{formatDate(item.created_at)}</TableCell>
+            <TableCell><Badge variant="outline" className="text-xs">Completed</Badge></TableCell>
           </>
         );
 
@@ -218,55 +235,53 @@ export const DashboardTable = ({ section, onBack, onToolStart }: DashboardTableP
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <Button variant="ghost" onClick={onBack} className="text-gray-600">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Dashboard
-          </Button>
-        </div>
-        <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-gray-200 rounded w-1/3"></div>
-          <div className="h-64 bg-gray-100 rounded"></div>
+      <div className="p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="animate-pulse space-y-4">
+            <div className="h-6 bg-gray-200 rounded w-1/4"></div>
+            <div className="h-96 bg-gray-100 rounded"></div>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header with Back Button and Create Button */}
-      <div className="flex items-center justify-between">
-        <Button variant="ghost" onClick={onBack} className="text-gray-600">
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Dashboard
-        </Button>
-        <Button 
-          onClick={() => onToolStart(getToolName())}
-          className="bg-blue-500 hover:bg-blue-600"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          Create New
-        </Button>
-      </div>
-
-      {/* Table Card */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
-        <div className="p-6 border-b border-gray-200">
-          <div className="flex items-center justify-between">
+    <div className="p-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center space-x-4">
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={onBack} 
+              className="text-gray-600 hover:text-gray-900 p-1"
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
             <div>
-              <h2 className="text-xl font-semibold text-navy-900">{tableData?.title}</h2>
-              <p className="text-sm text-gray-500 mt-1">{tableData?.items.length || 0} items found</p>
+              <h1 className="text-lg font-medium text-gray-900">{tableData?.title}</h1>
+              <p className="text-sm text-gray-500">{tableData?.items.length || 0} items found</p>
             </div>
           </div>
+          <Button 
+            size="sm"
+            onClick={() => onToolStart(getToolName())}
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+          >
+            <Plus className="h-4 w-4 mr-1" />
+            Add New
+          </Button>
         </div>
-        
-        <div className="overflow-x-auto">
+
+        {/* Table */}
+        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
           <Table>
             <TableHeader>
-              <TableRow className="bg-gray-50/50">
+              <TableRow className="bg-gray-50 border-b border-gray-200">
                 {tableData?.columns.map((column) => (
-                  <TableHead key={column} className="font-medium text-gray-700">
+                  <TableHead key={column} className="font-medium text-gray-700 text-xs uppercase tracking-wide py-3 px-4">
                     {column}
                   </TableHead>
                 ))}
@@ -275,26 +290,26 @@ export const DashboardTable = ({ section, onBack, onToolStart }: DashboardTableP
             <TableBody>
               {tableData?.items && tableData.items.length > 0 ? (
                 tableData.items.map((item, index) => (
-                  <TableRow key={item.id} className="hover:bg-gray-50/50">
+                  <TableRow key={item.id} className="border-b border-gray-100 hover:bg-gray-50/50">
                     {renderRowData(item, index)}
-                    <TableCell>
+                    <TableCell className="px-4 py-3">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-gray-400 hover:text-gray-600">
                             <MoreHorizontal className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="bg-white">
-                          <DropdownMenuItem className="cursor-pointer">
+                        <DropdownMenuContent align="end" className="bg-white border border-gray-200 shadow-lg">
+                          <DropdownMenuItem className="cursor-pointer text-sm">
                             <Eye className="h-4 w-4 mr-2" />
                             View
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="cursor-pointer">
+                          <DropdownMenuItem className="cursor-pointer text-sm">
                             <Edit className="h-4 w-4 mr-2" />
                             Edit
                           </DropdownMenuItem>
                           <DropdownMenuItem 
-                            className="cursor-pointer text-red-600"
+                            className="cursor-pointer text-sm text-red-600"
                             onClick={() => deleteItem(item.id)}
                           >
                             <Trash2 className="h-4 w-4 mr-2" />
@@ -309,13 +324,14 @@ export const DashboardTable = ({ section, onBack, onToolStart }: DashboardTableP
                 <TableRow>
                   <TableCell colSpan={tableData?.columns.length || 6} className="text-center py-12">
                     <div className="text-gray-500">
-                      <p className="text-lg font-medium mb-2">No {tableData?.title?.toLowerCase()} yet</p>
-                      <p className="text-sm mb-4">Get started by creating your first item</p>
+                      <p className="text-sm font-medium mb-1">No {tableData?.title?.toLowerCase()} yet</p>
+                      <p className="text-xs text-gray-400 mb-4">Get started by creating your first item</p>
                       <Button 
+                        size="sm"
                         onClick={() => onToolStart(getToolName())}
-                        className="bg-blue-500 hover:bg-blue-600"
+                        className="bg-blue-600 hover:bg-blue-700 text-white"
                       >
-                        <Plus className="h-4 w-4 mr-2" />
+                        <Plus className="h-4 w-4 mr-1" />
                         Create First Item
                       </Button>
                     </div>
