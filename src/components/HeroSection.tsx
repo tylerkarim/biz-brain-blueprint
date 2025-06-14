@@ -7,9 +7,9 @@ export const HeroSection = () => {
   return (
     <section className="relative pt-32 pb-20 px-6 lg:px-8 bg-gradient-to-br from-slate-50 to-blue-50 overflow-hidden">
       {/* Background Elements */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+      <div className="absolute inset-0 bg-grid-pattern opacity-5 pointer-events-none"></div>
       
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-center">
           {/* Main Content */}
           <div className="mx-auto max-w-4xl">
@@ -25,20 +25,21 @@ export const HeroSection = () => {
               Transform your business ideas into reality with AI-powered tools for startup creation, business planning, and launch execution.
             </p>
             
-            <div className="mb-8">
-              <Link to="/signup" className="inline-block">
-                <Button 
-                  size="lg" 
-                  className="bg-primary hover:bg-primary/90 text-white px-8 py-4 text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer"
-                >
+            <div className="mb-8 relative z-20">
+              <Button 
+                asChild
+                size="lg" 
+                className="bg-primary hover:bg-primary/90 text-white px-8 py-4 text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer"
+              >
+                <Link to="/signup">
                   Start for Free
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </div>
           
           {/* Flowing Lines Abstract Shape */}
-          <div className="relative mt-16">
+          <div className="relative mt-16 pointer-events-none">
             <div className="w-96 h-96 mx-auto relative">
               <img 
                 src="/lovable-uploads/73116177-a30a-4ace-9d48-59b070782d28.png" 
