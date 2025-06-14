@@ -34,6 +34,8 @@ interface DashboardTableProps {
   onToolStart: (toolName: string, data?: any) => void;
 }
 
+type TableName = 'business_ideas' | 'business_plans' | 'launch_assets' | 'user_tasks' | 'prompt_history';
+
 export const DashboardTable = ({ section, onBack, onToolStart }: DashboardTableProps) => {
   const { user } = useAuth();
 
@@ -45,7 +47,7 @@ export const DashboardTable = ({ section, onBack, onToolStart }: DashboardTableP
       switch (section) {
         case 'ideas':
           const { data: ideas } = await supabase
-            .from('business_ideas')
+            .from('business_ideas' as TableName)
             .select('*')
             .eq('user_id', user.id)
             .order('created_at', { ascending: false });
@@ -58,7 +60,7 @@ export const DashboardTable = ({ section, onBack, onToolStart }: DashboardTableP
 
         case 'plans':
           const { data: plans } = await supabase
-            .from('business_plans')
+            .from('business_plans' as TableName)
             .select('*')
             .eq('user_id', user.id)
             .order('created_at', { ascending: false });
@@ -71,7 +73,7 @@ export const DashboardTable = ({ section, onBack, onToolStart }: DashboardTableP
 
         case 'launch':
           const { data: assets } = await supabase
-            .from('launch_assets')
+            .from('launch_assets' as TableName)
             .select('*')
             .eq('user_id', user.id)
             .order('created_at', { ascending: false });
@@ -84,7 +86,7 @@ export const DashboardTable = ({ section, onBack, onToolStart }: DashboardTableP
 
         case 'tasks':
           const { data: tasks } = await supabase
-            .from('user_tasks')
+            .from('user_tasks' as TableName)
             .select('*')
             .eq('user_id', user.id)
             .order('created_at', { ascending: false });
@@ -97,7 +99,7 @@ export const DashboardTable = ({ section, onBack, onToolStart }: DashboardTableP
 
         case 'history':
           const { data: history } = await supabase
-            .from('prompt_history')
+            .from('prompt_history' as TableName)
             .select('*')
             .eq('user_id', user.id)
             .order('created_at', { ascending: false });
@@ -118,7 +120,7 @@ export const DashboardTable = ({ section, onBack, onToolStart }: DashboardTableP
   const deleteItem = async (itemId: string) => {
     if (!user) return;
 
-    const tableMap = {
+    const tableMap: Record<string, TableName> = {
       'ideas': 'business_ideas',
       'plans': 'business_plans', 
       'launch': 'launch_assets',
@@ -126,7 +128,7 @@ export const DashboardTable = ({ section, onBack, onToolStart }: DashboardTableP
       'history': 'prompt_history'
     };
 
-    const tableName = tableMap[section as keyof typeof tableMap];
+    const tableName = tableMap[section];
     if (tableName) {
       await supabase
         .from(tableName)
