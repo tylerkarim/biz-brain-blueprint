@@ -13,7 +13,7 @@ serve(async (req) => {
   }
 
   try {
-    const { businessGoal, timeframe } = await req.json();
+    const { weeklyGoal, availableHours, focusType } = await req.json();
     
     const authHeader = req.headers.get('Authorization')!;
     const supabase = createClient(
@@ -32,17 +32,31 @@ serve(async (req) => {
       return new Response('OpenAI API key not configured', { status: 500, headers: corsHeaders });
     }
 
-    const prompt = `Generate 5-8 specific, actionable tasks for a ${timeframe} to help achieve this business goal: "${businessGoal}"
+    const prompt = `You are a senior business productivity coach and strategic advisor. Create a weekly action plan for an entrepreneur.
 
-    For each task, provide:
-    - A clear, actionable title
-    - A brief description (1-2 sentences)
-    - Priority level (high/medium/low)
-    - Estimated due date within the ${timeframe}
-    
-    Focus on practical, achievable tasks that move the business forward.
-    
-    Format the response as a JSON array with objects containing: title, description, priority, dueDate (YYYY-MM-DD format)`;
+WEEKLY GOAL CONTEXT:
+- Primary Goal: ${weeklyGoal}
+- Available Time: ${availableHours} hours this week
+- Focus Type: ${focusType} (strategy vs execution)
+
+As their business advisor, generate 5-7 specific, actionable tasks that will move them closer to their goal. Each task should be:
+
+1. Achievable within their time constraints
+2. Directly tied to their weekly goal
+3. Prioritized by impact and urgency
+4. Specific enough to be completed without ambiguity
+
+For each task, provide:
+- Clear, actionable title
+- Brief description explaining why it matters
+- Estimated time investment
+- Priority level (high/medium/low)
+- Specific due date within this week
+- Success criteria or deliverable
+
+Focus on ${focusType === 'strategy' ? 'strategic planning, research, and decision-making tasks' : 'hands-on execution, building, and implementation tasks'}.
+
+Format as JSON array with objects containing: title, description, estimatedHours, priority, dueDate (YYYY-MM-DD), successCriteria`;
 
     const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -55,7 +69,7 @@ serve(async (req) => {
         messages: [
           {
             role: 'system',
-            content: 'You are a business productivity coach who creates actionable task lists. Always respond with valid JSON.'
+            content: 'You are a senior business productivity coach who creates actionable weekly plans. Always respond with valid JSON.'
           },
           {
             role: 'user',
@@ -77,39 +91,48 @@ serve(async (req) => {
         {
           title: "Define target customer persona",
           description: "Research and create detailed profiles of your ideal customers",
+          estimatedHours: 3,
           priority: "high",
-          dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+          dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+          successCriteria: "Complete customer persona document with demographics, pain points, and behavior patterns"
         },
         {
           title: "Create MVP prototype",
           description: "Build a basic version of your product to test with early users",
+          estimatedHours: 8,
           priority: "high",
-          dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+          dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+          successCriteria: "Working prototype that demonstrates core functionality"
         }
       ];
     }
 
     // Save tasks to database
+    const savedTasks = [];
     for (const task of tasks) {
-      await supabase.from('user_tasks').insert({
+      const { data: savedTask, error } = await supabase.from('user_tasks').insert({
         user_id: user.id,
         title: task.title,
-        description: task.description,
+        description: `${task.description} | Time: ${task.estimatedHours}h | Success: ${task.successCriteria}`,
         priority: task.priority,
         due_date: task.dueDate,
         completed: false
-      });
+      }).select().single();
+
+      if (!error) {
+        savedTasks.push(savedTask);
+      }
     }
 
     // Save to prompt history
     await supabase.from('prompt_history').insert({
       user_id: user.id,
       tool_name: 'tasks',
-      prompt: `Goal: ${businessGoal}, Timeframe: ${timeframe}`,
+      prompt: `Goal: ${weeklyGoal}, Hours: ${availableHours}, Focus: ${focusType}`,
       response: JSON.stringify(tasks)
     });
 
-    return new Response(JSON.stringify(tasks), {
+    return new Response(JSON.stringify({ tasks: savedTasks }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
 

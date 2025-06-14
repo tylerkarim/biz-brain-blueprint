@@ -7,6 +7,8 @@ import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { FolderGrid } from "@/components/dashboard/FolderGrid";
 import { IdeaGeneratorFlow } from "@/components/guided-flows/IdeaGeneratorFlow";
 import { BusinessPlanFlow } from "@/components/guided-flows/BusinessPlanFlow";
+import { LaunchToolkitFlow } from "@/components/guided-flows/LaunchToolkitFlow";
+import { TasksFlow } from "@/components/guided-flows/TasksFlow";
 
 type ActiveTool = null | 'idea-generator' | 'business-plan' | 'launch-toolkit' | 'tasks' | 'prompt-history' | 'resources';
 
@@ -40,6 +42,14 @@ const Dashboard = () => {
 
   if (activeTool === 'business-plan') {
     return <BusinessPlanFlow onBack={handleBackToDashboard} selectedIdea={selectedIdea} />;
+  }
+
+  if (activeTool === 'launch-toolkit') {
+    return <LaunchToolkitFlow onBack={handleBackToDashboard} />;
+  }
+
+  if (activeTool === 'tasks') {
+    return <TasksFlow onBack={handleBackToDashboard} />;
   }
 
   return (

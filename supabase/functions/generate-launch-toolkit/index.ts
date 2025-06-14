@@ -13,7 +13,7 @@ serve(async (req) => {
   }
 
   try {
-    const { businessName, industry } = await req.json();
+    const { businessName, brandFeeling, colorPreferences } = await req.json();
     
     const authHeader = req.headers.get('Authorization')!;
     const supabase = createClient(
@@ -32,21 +32,39 @@ serve(async (req) => {
       return new Response('OpenAI API key not configured', { status: 500, headers: corsHeaders });
     }
 
-    const prompt = `Generate launch toolkit assets for a ${industry} business named "${businessName}":
+    const prompt = `You are a senior brand designer and naming strategist. Create a comprehensive launch toolkit for "${businessName}" with the following requirements:
 
-    1. Logo Ideas (3 concepts):
-       - Creative concept descriptions
-       - Style recommendations
-    
-    2. Business Name Alternatives (5 suggestions):
-       - Alternative names with domain availability status
-       - Brief explanation for each name
-    
-    3. Brand Color Palette (3-4 colors):
-       - Color names and hex codes
-       - Usage recommendations
-    
-    Format as JSON with: logoIdeas, nameIdeas, brandColors arrays`;
+BRAND INPUTS:
+- Business Name: ${businessName}
+- Desired Brand Feeling: ${brandFeeling}
+- Color Preferences: ${colorPreferences}
+
+Generate a complete brand package with:
+
+1. Business Name Alternatives (5 options):
+   - Creative variations that capture the brand feeling
+   - Include domain availability assessment
+   - Brief rationale for each name
+
+2. Logo Concepts (3 detailed descriptions):
+   - Visual style that matches brand feeling
+   - Specific design elements and typography
+   - How it represents the business
+
+3. Brand Color Palette (4-5 colors):
+   - Primary, secondary, accent colors
+   - HEX codes for each
+   - Usage guidelines (text, backgrounds, highlights)
+
+4. Tagline Options (3 options):
+   - Memorable phrases under 6 words
+   - Capture the brand essence
+
+5. Brand Voice Description:
+   - Tone and personality
+   - Communication style
+
+Format as JSON with: nameAlternatives, logoIdeas, brandColors, taglines, brandVoice arrays/objects`;
 
     const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -55,11 +73,11 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4',
+        model: 'gpt-4o-mini',
         messages: [
           {
             role: 'system',
-            content: 'You are a brand designer who creates comprehensive launch toolkits. Always respond with valid JSON.'
+            content: 'You are a senior brand designer who creates comprehensive launch toolkits. Always respond with valid JSON only.'
           },
           {
             role: 'user',
@@ -77,21 +95,21 @@ serve(async (req) => {
       launchAssets = JSON.parse(openaiData.choices[0].message.content);
     } catch (e) {
       launchAssets = {
-        logoIdeas: [
-          { concept: "Modern geometric design with bold typography", style: "Minimalist" },
-          { concept: "Circular emblem with industry-specific iconography", style: "Professional" },
-          { concept: "Abstract lettermark with dynamic elements", style: "Creative" }
+        nameAlternatives: [
+          { name: businessName + "Pro", domain: businessName.toLowerCase() + "pro.com", available: true, rationale: "Professional variant" },
+          { name: businessName + "Hub", domain: businessName.toLowerCase() + "hub.com", available: false, rationale: "Central platform concept" }
         ],
-        nameIdeas: [
-          { name: businessName + "Pro", domain: businessName.toLowerCase() + "pro.com", available: true },
-          { name: businessName + "Hub", domain: businessName.toLowerCase() + "hub.com", available: false },
-          { name: businessName + "Labs", domain: businessName.toLowerCase() + "labs.com", available: true }
+        logoIdeas: [
+          { concept: "Modern geometric design with bold typography", style: "Minimalist", elements: "Clean lines, sans-serif font" },
+          { concept: "Circular emblem with industry iconography", style: "Professional", elements: "Icon within circle, balanced layout" }
         ],
         brandColors: [
-          { name: "Primary Blue", hex: "#3F82F9", usage: "Main brand color" },
+          { name: "Primary Blue", hex: "#3F82F9", usage: "Main brand color, buttons, links" },
           { name: "Deep Navy", hex: "#0F172A", usage: "Text and headers" },
-          { name: "Light Gray", hex: "#F8FAFC", usage: "Backgrounds" }
-        ]
+          { name: "Light Gray", hex: "#F8FAFC", usage: "Backgrounds and subtle elements" }
+        ],
+        taglines: ["Build Better", "Innovate Forward", "Create Impact"],
+        brandVoice: { tone: "Professional yet approachable", style: "Clear, confident, helpful" }
       };
     }
 
@@ -99,9 +117,9 @@ serve(async (req) => {
     const { data: savedAssets } = await supabase.from('launch_assets').insert({
       user_id: user.id,
       business_name: businessName,
-      industry,
+      industry: brandFeeling,
       logo_concepts: launchAssets.logoIdeas,
-      name_suggestions: launchAssets.nameIdeas,
+      name_suggestions: launchAssets.nameAlternatives,
       brand_colors: launchAssets.brandColors
     }).select().single();
 
@@ -109,7 +127,7 @@ serve(async (req) => {
     await supabase.from('prompt_history').insert({
       user_id: user.id,
       tool_name: 'launch-toolkit',
-      prompt: `Business: ${businessName}, Industry: ${industry}`,
+      prompt: `Business: ${businessName}, Feeling: ${brandFeeling}, Colors: ${colorPreferences}`,
       response: JSON.stringify(launchAssets)
     });
 
