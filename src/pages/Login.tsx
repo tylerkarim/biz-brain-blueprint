@@ -22,19 +22,17 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-purple-900 flex items-center justify-center px-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center px-6">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Link to="/" className="text-3xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
-            BuildAura
-          </Link>
-          <p className="text-gray-400 mt-2">Sign in to your account</p>
+          <Link to="/" className="text-3xl font-bold text-navy-900">BuildAura</Link>
+          <p className="text-gray-600 mt-2">Sign in to your account</p>
         </div>
 
-        <Card className="p-8 shadow-xl border border-gray-700 bg-gray-800/50 backdrop-blur-sm">
+        <Card className="p-8 shadow-xl border-0">
           <form onSubmit={handleLogin} className="space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                 Email address
               </label>
               <Input
@@ -44,22 +42,22 @@ const Login = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
                 required
-                className="w-full bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                className="w-full"
               />
             </div>
 
             <Button 
               type="submit" 
-              className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
+              className="w-full bg-primary hover:bg-primary/90"
               disabled={isLoading}
             >
               {isLoading ? "Signing in..." : "Sign In"}
             </Button>
           </form>
 
-          <p className="mt-8 text-center text-sm text-gray-400">
+          <p className="mt-8 text-center text-sm text-gray-600">
             Don't have an account?{" "}
-            <Link to="/signup" className="font-medium text-purple-400 hover:text-purple-300">
+            <Link to="/signup" className="font-medium text-primary hover:text-primary/90">
               Sign up for free
             </Link>
           </p>
