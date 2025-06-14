@@ -1,5 +1,5 @@
 
-import { X, ExternalLink, Edit, Trash2 } from "lucide-react";
+import { X, ExternalLink, Edit, Trash2, Folder } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface FolderPanelProps {
