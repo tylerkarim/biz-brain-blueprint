@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -24,11 +23,10 @@ export const Navigation = () => {
       <div className="px-4 md:px-6 h-16 flex items-center justify-between">
         <div className="flex items-center">
           <Link to={homeRoute} className="flex items-center">
-            <img 
-              src="/lovable-uploads/73116177-a30a-4ace-9d48-59b070782d28.png" 
-              alt="BuildAura Logo" 
-              className="h-8 w-auto"
-            />
+            <div className="text-lg md:text-xl font-medium">
+              <span className="text-black">Build</span>
+              <span className="text-blue-600">Aura</span>
+            </div>
           </Link>
         </div>
         
