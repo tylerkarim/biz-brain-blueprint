@@ -101,36 +101,39 @@ export const DashboardSidebar = ({ activeSection, onSectionChange }: DashboardSi
   ];
 
   return (
-    <div className="w-64 bg-blue-600 min-h-screen text-white flex flex-col">
+    <div className="w-64 bg-blue-600 min-h-screen text-white flex flex-col font-dm-sans">
       {/* Logo/Brand */}
-      <div className="p-6 border-b border-blue-500">
-        <h1 className="text-xl font-bold">BuildAura</h1>
+      <div className="px-6 py-5 border-b border-blue-500/30">
+        <h1 className="text-xl font-medium text-white">BuildAura</h1>
+        <p className="text-xs text-blue-100 mt-1 font-normal">AI Business Partner</p>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-4 py-6">
-        <div className="space-y-2">
+      <nav className="flex-1 px-3 py-4">
+        <div className="space-y-1">
           {sidebarItems.map((item) => {
             const IconComponent = item.icon;
             return (
               <button
                 key={item.id}
                 onClick={() => onSectionChange(item.id)}
-                className={`w-full flex items-center justify-between px-4 py-3 rounded-lg text-left transition-colors ${
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-left transition-all duration-200 group ${
                   item.isActive 
-                    ? 'bg-blue-500 text-white' 
-                    : 'text-blue-100 hover:bg-blue-500/50 hover:text-white'
+                    ? 'bg-blue-500/90 text-white shadow-sm' 
+                    : 'text-blue-100/90 hover:bg-blue-500/40 hover:text-white'
                 }`}
               >
                 <div className="flex items-center space-x-3">
-                  <IconComponent className="h-5 w-5" />
-                  <span className="font-medium">{item.title}</span>
+                  <IconComponent className={`h-4 w-4 ${item.isActive ? 'text-white' : 'text-blue-200'}`} />
+                  <span className="text-sm font-normal">{item.title}</span>
                 </div>
                 {item.count !== null && (
                   <Badge 
                     variant="secondary" 
-                    className={`text-xs ${
-                      item.isActive ? 'bg-white text-blue-600' : 'bg-blue-500 text-white'
+                    className={`text-xs px-2 py-0.5 rounded-full font-normal ${
+                      item.isActive 
+                        ? 'bg-white/20 text-white border-0' 
+                        : 'bg-blue-500/30 text-blue-100 border-0'
                     }`}
                   >
                     {item.count}
@@ -143,10 +146,10 @@ export const DashboardSidebar = ({ activeSection, onSectionChange }: DashboardSi
       </nav>
 
       {/* Footer */}
-      <div className="p-4 border-t border-blue-500">
-        <div className="text-xs text-blue-200">
-          <p>BuildAura Dashboard</p>
-          <p>AI Business Partner</p>
+      <div className="px-4 py-4 border-t border-blue-500/30">
+        <div className="text-xs text-blue-200/80 font-normal">
+          <p className="font-medium text-blue-100">BuildAura Dashboard</p>
+          <p className="mt-0.5">Your AI Business Cofounder</p>
         </div>
       </div>
     </div>
