@@ -1,32 +1,14 @@
 
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { User } from "@supabase/supabase-js";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const Navigation = () => {
   const location = useLocation();
-  const [user, setUser] = useState<User | null>(null);
-  
-  useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-    });
-
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
+  const { user, signOut } = useAuth();
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
+    await signOut();
   };
 
   // Determine the home route based on authentication status
@@ -40,7 +22,7 @@ export const Navigation = () => {
             <div className="flex-shrink-0">
               <Link to={homeRoute} className="text-2xl font-bold">
                 <span className="text-black">Build</span>
-                <span className="text-primary">Aura</span>
+                <span className="text-blue-600">Aura</span>
               </Link>
             </div>
           </div>
@@ -48,8 +30,12 @@ export const Navigation = () => {
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
               <Link to="/pricing" className="text-gray-700 hover:text-primary transition-colors px-3 py-2 text-sm font-medium">Pricing</Link>
-              <Link to="/tools" className="text-gray-700 hover:text-primary transition-colors px-3 py-2 text-sm font-medium">Tools</Link>
-              <Link to="/about" className="text-gray-700 hover:text-primary transition-colors px-3 py-2 text-sm font-medium">About</Link>
+              {!user && (
+                <>
+                  <Link to="/tools" className="text-gray-700 hover:text-primary transition-colors px-3 py-2 text-sm font-medium">Tools</Link>
+                  <Link to="/about" className="text-gray-700 hover:text-primary transition-colors px-3 py-2 text-sm font-medium">About</Link>
+                </>
+              )}
             </div>
           </div>
           
