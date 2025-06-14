@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSignup = async (e: React.FormEvent) => {
@@ -25,7 +26,10 @@ const Signup = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center px-6">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Link to="/" className="text-3xl font-bold text-navy-900">BuildAura</Link>
+          <Link to="/" className="text-3xl font-bold">
+            <span className="text-black">Build</span>
+            <span className="text-primary">Aura</span>
+          </Link>
           <p className="text-gray-600 mt-2">Create your free account</p>
         </div>
 
@@ -41,6 +45,21 @@ const Signup = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
+                required
+                className="w-full"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                Password
+              </label>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
                 required
                 className="w-full"
               />

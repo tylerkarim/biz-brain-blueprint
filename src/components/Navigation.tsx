@@ -11,7 +11,10 @@ export const Navigation = () => {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <Link to="/" className="text-2xl font-bold text-navy-900">BuildAura</Link>
+              <Link to="/" className="text-2xl font-bold">
+                <span className="text-black">Build</span>
+                <span className="text-primary">Aura</span>
+              </Link>
             </div>
           </div>
           
