@@ -3,20 +3,17 @@ import { Link } from "react-router-dom";
 import { LucideIcon } from "lucide-react";
 
 interface FolderCardProps {
-  folder: {
-    id: string;
-    title: string;
-    description: string;
-    icon: LucideIcon;
-    count: number;
-    countLabel: string;
-    href: string;
-  };
+  id: string;
+  title: string;
+  description: string;
+  icon: LucideIcon;
+  count: number;
+  lastUpdated: string;
   onClick: () => void;
 }
 
-export const FolderCard = ({ folder, onClick }: FolderCardProps) => {
-  const IconComponent = folder.icon;
+export const FolderCard = ({ id, title, description, icon, count, lastUpdated, onClick }: FolderCardProps) => {
+  const IconComponent = icon;
   
   return (
     <div
@@ -28,26 +25,25 @@ export const FolderCard = ({ folder, onClick }: FolderCardProps) => {
           <IconComponent className="h-6 w-6 text-primary" />
         </div>
         <div className="text-sm text-gray-500">
-          {folder.count} {folder.countLabel}
+          {count} items
         </div>
       </div>
       
       <h3 className="text-lg font-semibold text-navy-900 mb-2 group-hover:text-primary transition-colors">
-        {folder.title}
+        {title}
       </h3>
       
-      <p className="text-gray-600 text-sm leading-relaxed">
-        {folder.description}
+      <p className="text-gray-600 text-sm leading-relaxed mb-4">
+        {description}
       </p>
       
-      <div className="mt-4 pt-4 border-t border-gray-100">
-        <Link
-          to={folder.href}
-          className="text-primary text-sm font-medium hover:text-primary/80 transition-colors"
-          onClick={(e) => e.stopPropagation()}
-        >
+      <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
+        <span className="text-xs text-gray-400">
+          Updated {lastUpdated}
+        </span>
+        <span className="text-primary text-sm font-medium hover:text-primary/80 transition-colors">
           Open →
-        </Link>
+        </span>
       </div>
     </div>
   );
