@@ -1,25 +1,49 @@
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { supabase } from "@/integrations/supabase/client";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
+  const navigate = useNavigate();
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError("");
+    setSuccess(false);
     
-    // Simulate signup process - allow any email without verification
-    setTimeout(() => {
+    try {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/dashboard`
+        }
+      });
+
+      if (error) {
+        setError(error.message);
+      } else {
+        setSuccess(true);
+        // Navigate to dashboard after successful signup
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 2000);
+      }
+    } catch (err) {
+      setError("An unexpected error occurred");
+    } finally {
       setIsLoading(false);
-      // Redirect to dashboard
-      window.location.href = "/dashboard";
-    }, 2000);
+    }
   };
 
   return (
@@ -34,6 +58,20 @@ const Signup = () => {
         </div>
 
         <Card className="p-8 shadow-xl border-0">
+          {error && (
+            <Alert variant="destructive" className="mb-4">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+          
+          {success && (
+            <Alert className="mb-4">
+              <AlertDescription>
+                Account created successfully! Redirecting to dashboard...
+              </AlertDescription>
+            </Alert>
+          )}
+          
           <form onSubmit={handleSignup} className="space-y-6">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">

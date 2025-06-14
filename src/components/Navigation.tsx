@@ -1,9 +1,36 @@
 
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { User } from "@supabase/supabase-js";
 
 export const Navigation = () => {
   const location = useLocation();
+  const [user, setUser] = useState<User | null>(null);
+  
+  useEffect(() => {
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+  };
+
+  // Determine the home route based on authentication status
+  const homeRoute = user ? "/dashboard" : "/";
   
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
@@ -11,7 +38,7 @@ export const Navigation = () => {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <Link to="/" className="text-2xl font-bold">
+              <Link to={homeRoute} className="text-2xl font-bold">
                 <span className="text-black">Build</span>
                 <span className="text-primary">Aura</span>
               </Link>
@@ -27,16 +54,24 @@ export const Navigation = () => {
           </div>
           
           <div className="flex items-center space-x-4">
-            <Link to="/login">
-              <Button variant="outline" className="hidden sm:inline-flex">
-                Log in
+            {user ? (
+              <Button onClick={handleSignOut} variant="outline" className="hidden sm:inline-flex">
+                Sign Out
               </Button>
-            </Link>
-            <Link to="/signup">
-              <Button className="bg-primary hover:bg-primary/90">
-                Start for Free
-              </Button>
-            </Link>
+            ) : (
+              <>
+                <Link to="/login">
+                  <Button variant="outline" className="hidden sm:inline-flex">
+                    Log in
+                  </Button>
+                </Link>
+                <Link to="/signup">
+                  <Button className="bg-primary hover:bg-primary/90">
+                    Start for Free
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>
