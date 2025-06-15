@@ -34,9 +34,9 @@ serve(async (req) => {
       return new Response('Unauthorized', { status: 401, headers: corsHeaders });
     }
 
-    const openaiApiKey = Deno.env.get('OPENAI_API_KEY');
-    if (!openaiApiKey) {
-      return new Response('OpenAI API key not configured', { status: 500, headers: corsHeaders });
+    const geminiApiKey = Deno.env.get('GEMINI_API_KEY');
+    if (!geminiApiKey) {
+      return new Response('Gemini API key not configured', { status: 500, headers: corsHeaders });
     }
 
     // Create a detailed, personalized prompt
@@ -134,40 +134,39 @@ Respond with valid JSON only in this exact format:
       brandVibe
     });
 
-    const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+    const geminiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${geminiApiKey}`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${openaiApiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
+        contents: [
           {
-            role: 'system',
-            content: 'You are a world-class brand strategist who creates unique, personalized brand identities. Always respond with valid JSON only. Never use generic or template responses. Each output must be completely tailored to the specific business details provided.'
-          },
-          {
-            role: 'user',
-            content: prompt
+            parts: [
+              {
+                text: prompt
+              }
+            ]
           }
         ],
-        temperature: 0.9, // Increased for more creativity and uniqueness
-        max_tokens: 2000,
+        generationConfig: {
+          temperature: 0.9,
+          maxOutputTokens: 2000,
+        }
       }),
     });
 
-    const openaiData = await openaiResponse.json();
-    console.log('OpenAI response received');
+    const geminiData = await geminiResponse.json();
+    console.log('Gemini response received');
     
     let launchAssets;
     
     try {
-      const content = openaiData.choices[0].message.content;
-      console.log('Raw OpenAI content:', content);
+      const content = geminiData.candidates[0].content.parts[0].text;
+      console.log('Raw Gemini content:', content);
       launchAssets = JSON.parse(content);
     } catch (e) {
-      console.error('Failed to parse OpenAI response:', e);
+      console.error('Failed to parse Gemini response:', e);
       // Fallback with personalized content based on inputs
       launchAssets = {
         nameAlternatives: [

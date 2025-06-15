@@ -29,9 +29,9 @@ serve(async (req) => {
       throw new Error('Unauthorized');
     }
 
-    const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
-    if (!openAIApiKey) {
-      throw new Error('OpenAI API key not configured');
+    const geminiApiKey = Deno.env.get('GEMINI_API_KEY');
+    if (!geminiApiKey) {
+      throw new Error('Gemini API key not configured');
     }
 
     const businessCoachPrompt = `You are a senior business strategist and startup incubator partner. A entrepreneur has shared their background with you, and you need to generate 4 high-potential startup ideas that match their profile.
@@ -60,44 +60,46 @@ For each idea, provide exactly this structure:
 
 Return as a JSON array of 4 ideas. Be specific, actionable, and focus on real business opportunities that could generate $100K+ ARR within 18 months.`;
 
-    console.log('Sending request to OpenAI with prompt:', businessCoachPrompt);
+    console.log('Sending request to Gemini with prompt:', businessCoachPrompt);
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${geminiApiKey}`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { 
-            role: 'system', 
-            content: 'You are a senior business strategist and startup incubator partner. Respond only with valid JSON arrays.' 
-          },
-          { role: 'user', content: businessCoachPrompt }
+        contents: [
+          {
+            parts: [
+              {
+                text: businessCoachPrompt
+              }
+            ]
+          }
         ],
-        temperature: 0.8,
-        max_tokens: 2000,
+        generationConfig: {
+          temperature: 0.8,
+          maxOutputTokens: 2000,
+        }
       }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('OpenAI API error:', errorText);
-      throw new Error(`OpenAI API error: ${response.status}`);
+      console.error('Gemini API error:', errorText);
+      throw new Error(`Gemini API error: ${response.status}`);
     }
 
     const data = await response.json();
-    const generatedContent = data.choices[0].message.content;
+    const generatedContent = data.candidates[0].content.parts[0].text;
     
-    console.log('OpenAI response:', generatedContent);
+    console.log('Gemini response:', generatedContent);
 
     let ideas;
     try {
       ideas = JSON.parse(generatedContent);
     } catch (parseError) {
-      console.error('Failed to parse OpenAI response as JSON:', parseError);
+      console.error('Failed to parse Gemini response as JSON:', parseError);
       throw new Error('Invalid response format from AI');
     }
 

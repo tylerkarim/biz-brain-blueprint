@@ -27,9 +27,9 @@ serve(async (req) => {
       return new Response('Unauthorized', { status: 401, headers: corsHeaders });
     }
 
-    const openaiApiKey = Deno.env.get('OPENAI_API_KEY');
-    if (!openaiApiKey) {
-      return new Response('OpenAI API key not configured', { status: 500, headers: corsHeaders });
+    const geminiApiKey = Deno.env.get('GEMINI_API_KEY');
+    if (!geminiApiKey) {
+      return new Response('Gemini API key not configured', { status: 500, headers: corsHeaders });
     }
 
     const prompt = `You are a senior business productivity coach and strategic advisor. Create a weekly action plan for an entrepreneur.
@@ -58,33 +58,33 @@ Focus on ${focusType === 'strategy' ? 'strategic planning, research, and decisio
 
 Format as JSON array with objects containing: title, description, estimatedHours, priority, dueDate (YYYY-MM-DD), successCriteria`;
 
-    const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+    const geminiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${geminiApiKey}`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${openaiApiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
+        contents: [
           {
-            role: 'system',
-            content: 'You are a senior business productivity coach who creates actionable weekly plans. Always respond with valid JSON.'
-          },
-          {
-            role: 'user',
-            content: prompt
+            parts: [
+              {
+                text: prompt
+              }
+            ]
           }
         ],
-        temperature: 0.7,
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: 2000,
+        }
       }),
     });
 
-    const openaiData = await openaiResponse.json();
+    const geminiData = await geminiResponse.json();
     let tasks;
     
     try {
-      tasks = JSON.parse(openaiData.choices[0].message.content);
+      tasks = JSON.parse(geminiData.candidates[0].content.parts[0].text);
     } catch (e) {
       // Fallback if JSON parsing fails
       tasks = [
